@@ -771,31 +771,45 @@
                 });
             }
 
+           // --- BUSCADOR REPARADO ---
             searchInput.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
+                const term = e.target.value.toLowerCase().trim();
+
+                // 1. Si borras el texto, volver a la vista normal
                 if(term.length === 0) {
                     resetSelection();
                     return;
                 }
 
-                const found = data.nodes.find(n => 
-                    n.label.toLowerCase().includes(term) || 
-                    n.id.toLowerCase().includes(term)
-                );
+                // 2. Buscar el nodo (Protegido contra errores si falta el label)
+                const found = data.nodes.find(n => {
+                    // Convertimos a string por seguridad antes de buscar
+                    const labelText = n.label ? String(n.label).toLowerCase() : "";
+                    const idText = n.id ? String(n.id).toLowerCase() : "";
+                    
+                    return labelText.includes(term) || idText.includes(term);
+                });
 
+                // 3. Si lo encuentra, hacer Zoom y resaltar
                 if(found) {
+                    // Resaltar visualmente
                     highlightNode(found);
-                    const scale = 2; 
+                    showTooltip(found, width/2, height/2); // Mostrar tooltip en el centro temporalmente
+
+                    // Calcular coordenadas para el zoom
+                    const scale = 2.5; 
                     const transform = d3.zoomIdentity
                         .translate(width / 2, height / 2)
                         .scale(scale)
                         .translate(-found.x, -found.y);
 
+                    // Transición suave de la cámara
                     svg.transition().duration(750).call(zoomBehavior.transform, transform);
-                    showTooltip(found, width/2, height/2);
+                } else {
+                    // Opcional: Si no encuentra nada, podrías quitar la selección anterior
+                    // resetSelection(); 
                 }
             });
-
             simulation.on("tick", () => {
                 link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
                 linkLabel.attr("x", d => (d.source.x + d.target.x) / 2).attr("y", d => (d.source.y + d.target.y) / 2);
