@@ -30,7 +30,7 @@
 | **NCBR** | National Hub | NCBR (Poland) | National Centre for Research and Development. Polish funding agency. | [Link](https://www.gov.pl/web/ncbr) |
 | **Polish Presidency** | National Hub | Polish Presidency '25 | EU Council Presidency 2025. Pushing 'Digital Networks Act'. | [Link](https://pl2025.eu/) |
 | **SAL** | National Hub | Silicon Austria Labs | Austria's top research center for EBS. Focus on 6G Sensing & Hardware. | [Link](https://silicon-austria-labs.com/) |
-| **SERI** | National Hub | SERI (Switzerland) | Swiss State Secretariat for Education. Funds Swiss partners in SNS JU. | [Link] (https://www.sbfi.admin.ch/sbfi/en/home.html) |
+| **SERI** | National Hub | SERI (Switzerland) | Swiss State Secretariat for Education. Funds Swiss partners in SNS JU. | [Link](https://www.sbfi.admin.ch/sbfi/en/home.html) |
 | **Nokia** | Corporate | Nokia | Leading Hexa-X, 6G-ANNA. Chair of 6G-IA. Coordinator of SUSTAIN-6G. | [Link](https://www.nokia.com/networks/6g/) |
 | **Ericsson** | Corporate | Ericsson | Tech Manager in Hexa-X. Focus on sustainability. | [Link](https://www.ericsson.com/en/6g) |
 | **Deutsche Telekom** | Corporate | D. Telekom | Leading operator. Focus on 6G-TakeOff (NTN). | [Link](https://www.telekom.com/en/company/digital-responsibility/details/6g-research-1033604) |
