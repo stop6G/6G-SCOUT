@@ -410,8 +410,7 @@
 
     <div id="tooltip" class="tooltip"></div>
     <div id="graph-container"></div>
-
-   <script>
+<script>
     // Toggle Legend Function
     function toggleLegend() {
         const content = document.getElementById('legend-content');
@@ -428,86 +427,98 @@
 
     window.addEventListener('load', function() {
         
-        // 1. CARGA DE DATOS EXTERNOS (CSV)
+        console.log("Iniciando carga de datos...");
+
+        // 1. CARGA DE DATOS EXTERNOS
         Promise.all([
-            d3.csv("data/nodes.csv"), // Asegúrate de que la ruta sea correcta
+            d3.csv("data/nodes.csv"),
             d3.csv("data/links.csv")
-        ]).then(function([nodesData, linksData]) {
+        ]).then(function([rawNodes, rawLinks]) {
 
-            // --- PROCESAMIENTO Y LIMPIEZA DE DATOS ---
+            console.log("Archivos cargados. Procesando...");
+            console.log("Ejemplo crudo nodo 0:", rawNodes[0]); // Muestra en consola qué columnas lee realmente
 
-            // A. Convertir números (CSV lee todo como texto por defecto)
-            nodesData.forEach(d => {
-                d.size = +d.size;   // Convertir a número
-                d.group = +d.group; // Convertir a número
+            // --- PROCESAMIENTO ROBUSTO DE DATOS ---
+            
+            // 2. Limpieza y Conversión de Tipos
+            const nodes = rawNodes.map(d => {
+                // Intentamos leer 'group' o 'Group' (por si acaso mayúsculas)
+                let g = d.group || d.Group; 
+                let s = d.size || d.Size;
+
+                return {
+                    id: d.id,
+                    // Convertimos a número entero. Si falla, ponemos grupo 1 por defecto
+                    group: parseInt(g, 10) || 1, 
+                    // Convertimos tamaño. Si falla, tamaño 15 por defecto
+                    size: parseInt(s, 10) || 15,
+                    label: d.label || d.id, // Si no hay label, usa el ID
+                    desc: d.desc || "",
+                    url: d.url || ""
+                };
             });
 
-            // B. Crear un Mapa de IDs para validación (Evitar el error "node not found")
-            const nodeIds = new Set(nodesData.map(d => d.id));
+            // Mapa de IDs para filtrar links rotos
+            const nodeIds = new Set(nodes.map(d => d.id));
 
-            // C. Filtrar links rotos (Si un link apunta a un nodo que no existe, se borra)
-            const cleanLinks = linksData.filter(d => {
+            const links = rawLinks.filter(d => {
+                // Verificar que source y target existen
                 if (nodeIds.has(d.source) && nodeIds.has(d.target)) {
                     return true;
-                } else {
-                    console.warn(`Link eliminado por seguridad: ${d.source} -> ${d.target} (Nodo no encontrado)`);
-                    return false;
                 }
-            });
+                return false;
+            }).map(d => ({
+                source: d.source,
+                target: d.target,
+                type: d.type,
+                amount: d.amount
+            }));
 
-            // D. Reconstruir el objeto data
-            const data = {
-                nodes: nodesData,
-                links: cleanLinks
-            };
+            console.log(`Datos finales: ${nodes.length} nodos, ${links.length} links.`);
 
-            // --- AQUI EMPIEZA LA LÓGICA ORIGINAL DE TU GRAFO ---
-
-            // 2. COUNTS LOGIC
-            // 2. COUNTS LOGIC (MEJORADO)
+            // 3. LÓGICA DE CONTADORES (Actualizada)
             const counts = { 1:0, 2:0, 3:0, 4:0, 5:0, 'calls':0 };
             
-            data.nodes.forEach(node => {
-                // Forzamos que sea un número entero (base 10)
-                let g = parseInt(node.group, 10);
-                
-                // Si es un grupo de Calls (6, 7 u 8), lo sumamos a 'calls'
+            nodes.forEach(n => {
+                let g = n.group;
+                // Si es 6, 7 u 8, cuenta como 'calls'
                 if (g >= 6 && g <= 8) {
                     counts['calls']++;
-                } 
-                // Si es un grupo normal (1-5), lo sumamos si existe en el contador
-                else if (counts[g] !== undefined) {
+                } else if (counts[g] !== undefined) {
                     counts[g]++;
                 }
             });
 
-            console.log("Conteo de nodos:", counts); // Mira la consola (F12) para ver si cuenta bien
-
-            // Actualizar la leyenda de forma segura (verifica si el elemento existe antes de escribir)
-            const setBadge = (id, count) => {
+            // Función segura para actualizar el HTML
+            const updateBadge = (id, val) => {
                 const el = document.getElementById(id);
-                if (el) el.textContent = `(${count})`;
+                if (el) el.textContent = `(${val})`;
             };
 
-            setBadge('count-1', counts[1]);
-            setBadge('count-2', counts[2]);
-            setBadge('count-3', counts[3]);
-            setBadge('count-4', counts[4]);
-            setBadge('count-calls', counts['calls']);
-            setBadge('count-5', counts[5]);
+            updateBadge('count-1', counts[1]);
+            updateBadge('count-2', counts[2]);
+            updateBadge('count-3', counts[3]);
+            updateBadge('count-4', counts[4]);
+            updateBadge('count-calls', counts['calls']);
+            updateBadge('count-5', counts[5]);
 
-            // 3. D3 CONFIGURATION & CONSTANTS
+
+            // --- CONFIGURACIÓN D3 ---
             const width = window.innerWidth;
             const height = window.innerHeight;
+            
+            // Definir colores
             const colorScale = {
-                1: "#60a5fa", 2: "#34d399", 3: "#f87171", 4: "#c084fc", 5: "#fbbf24", 6: "#f472b6", 7: "#ec4899", 8: "#db2777"
+                1: "#60a5fa", 2: "#34d399", 3: "#f87171", 4: "#c084fc", 
+                5: "#fbbf24", 6: "#f472b6", 7: "#ec4899", 8: "#db2777"
             };
 
-            // 4. DOM SETUP
+            // SVG Setup
             const svg = d3.select("#graph-container").append("svg")
                 .attr("width", width)
                 .attr("height", height);
 
+            // Flechas (Markers)
             svg.append("defs").selectAll("marker")
                 .data(["end"])
                 .enter().append("marker")
@@ -525,326 +536,170 @@
             const g = svg.append("g");
             const indicatorsLayer = svg.append("g").attr("class", "indicators-layer");
             const tooltip = d3.select("#tooltip");
-            const breakdown = document.getElementById("investment-breakdown");
-            const searchInput = document.getElementById('search-input');
-            const invBox = document.getElementById('investment-box-trigger');
-
-            // 5. VARIABLES FOR SELECTIONS
-            let link, linkLabel, node, label;
-            let selectedNode = null; 
-
-            // 6. HELPER FUNCTIONS
-            function updateIndicators(transform) {
-                const padding = 20;
-                const importantNodes = data.nodes.filter(d => d.size >= 15);
-                
-                const indicatorsData = [];
-
-                importantNodes.forEach(d => {
-                    if (typeof d.x !== 'number' || typeof d.y !== 'number') return;
-                    
-                    const nx = transform.applyX(d.x);
-                    const ny = transform.applyY(d.y);
-                    
-                    if (nx < 0 || nx > width || ny < 0 || ny > height) {
-                        const cx = width / 2;
-                        const cy = height / 2;
-                        const angle = Math.atan2(ny - cy, nx - cx);
-                        
-                        let ix = nx;
-                        let iy = ny;
-                        
-                        if (ix < padding) ix = padding;
-                        if (ix > width - padding) ix = width - padding;
-                        if (iy < padding) iy = padding;
-                        if (iy > height - padding) iy = height - padding;
-                        
-                        indicatorsData.push({
-                            node: d,
-                            x: ix,
-                            y: iy,
-                            angle: angle * (180 / Math.PI) 
-                        });
-                    }
-                });
-
-                if (!indicatorsLayer) return;
-
-                const indicators = indicatorsLayer.selectAll(".indicator")
-                    .data(indicatorsData, d => d.node.id);
-                
-                indicators.exit().remove();
-                
-                const indicatorsEnter = indicators.enter().append("g")
-                    .attr("class", "indicator")
-                    .on("click", (event, d) => {
-                        const scale = 1.5;
-                        const transform = d3.zoomIdentity
-                            .translate(width / 2, height / 2)
-                            .scale(scale)
-                            .translate(-d.node.x, -d.node.y);
-                        
-                        svg.transition().duration(750)
-                            .call(zoomBehavior.transform, transform);
-                    });
-
-                indicatorsEnter.append("path")
-                    .attr("d", "M-6,-6 L0,0 L-6,6") 
-                    .attr("fill", "none")
-                    .attr("stroke-width", 3)
-                    .attr("stroke-linecap", "round");
-
-                indicators.merge(indicatorsEnter)
-                    .attr("transform", d => `translate(${d.x}, ${d.y}) rotate(${d.angle})`)
-                    .select("path")
-                    .attr("stroke", d => colorScale[d.node.group]); 
-            }
-
-            function highlightNode(d) {
-                if (!link || !linkLabel || !node) return;
-
-                link.attr("stroke-opacity", 0.1);
-                linkLabel.style("opacity", 0.1);
-
-                const targetNode = node.filter(n => n === d);
-                targetNode
-                    .transition().duration(300)
-                    .attr("stroke", "#fff")
-                    .attr("stroke-width", 5)
-                    .style("filter", "drop-shadow(0 0 20px " + colorScale[d.group] + ")");
-
-                link.filter(l => l.source === d || l.target === d)
-                    .transition().duration(300)
-                    .attr("stroke-opacity", 1)
-                    .attr("stroke-width", 2.5);
-                
-                linkLabel.filter(l => l.source === d || l.target === d)
-                    .style("opacity", 1);
-            }
-
-            function resetSelection() {
-                if (!node) return;
-                node.transition().duration(300)
-                    .attr("stroke", "#fff")
-                    .attr("stroke-width", 2)
-                    .style("filter", "drop-shadow(0 0 4px rgba(255,255,255,0.3))");
-                
-                if (link) link.transition().duration(300).attr("stroke-opacity", 0.3);
-                if (linkLabel) linkLabel.style("opacity", 1);
-                tooltip.transition().duration(200).style("opacity", 0);
-            }
-
-            function showTooltip(d, x, y) {
-                tooltip.transition().duration(200).style("opacity", 1);
-                tooltip.html(`
-                    <div class="font-bold border-b border-gray-500/30 pb-1 mb-1" style="color:${colorScale[d.group]}">${d.label}</div>
-                    <div class="text-gray-200 leading-snug">${d.desc}</div>
-                `)
-                .style("left", (x + 20) + "px")
-                .style("top", (y - 20) + "px");
-            }
-
-            function dragstarted(event, d) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
-                d3.select(this).style("cursor", "grabbing");
-            }
-
-            function dragged(event, d) {
-                d.fx = event.x;
-                d.fy = event.y;
-            }
-
-            function dragended(event, d) {
-                if (!event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
-                d3.select(this).style("cursor", "grab");
-            }
-
-            // 7. SETUP BEHAVIORS
-            const zoomBehavior = d3.zoom()
-                .scaleExtent([0.1, 4])
-                .on("zoom", (event) => {
-                    g.attr("transform", event.transform);
-                    updateIndicators(event.transform);
-                });
-
-            svg.call(zoomBehavior);
-
-            const simulation = d3.forceSimulation(data.nodes)
-                .velocityDecay(0.3) 
-                // IMPORTANTE: .id(d => d.id) es vital para conectar con el CSV
-                .force("link", d3.forceLink(data.links).id(d => d.id).distance(d => {
-                    if (d.source.group >= 6 || d.target.group >= 6) return 140; 
-                    return 200; 
-                }))
-                .force("charge", d3.forceManyBody().strength(-500)) 
+            
+            // --- SIMULACIÓN ---
+            const simulation = d3.forceSimulation(nodes)
+                .velocityDecay(0.3)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(200))
+                .force("charge", d3.forceManyBody().strength(-500))
                 .force("center", d3.forceCenter(width / 2, height / 2))
-                .force("collide", d3.forceCollide().radius(d => d.size + 25).strength(0.8));
+                .force("collide", d3.forceCollide().radius(d => d.size + 10).strength(0.8));
 
-            // 8. DRAW ELEMENTS
-            link = g.append("g").selectAll("line")
-                .data(data.links).enter().append("line")
-                .attr("stroke", "#ffffff").attr("stroke-opacity", 0.3).attr("stroke-width", 1.5).attr("marker-end", "url(#arrow)");
+            // --- DIBUJO ---
+            let link = g.append("g").selectAll("line")
+                .data(links).enter().append("line")
+                .attr("stroke", "#ffffff")
+                .attr("stroke-opacity", 0.3)
+                .attr("stroke-width", 1.5)
+                .attr("marker-end", "url(#arrow)");
 
-            linkLabel = g.append("g").selectAll("text")
-                .data(data.links).enter().append("text")
+            let linkLabel = g.append("g").selectAll("text")
+                .data(links).enter().append("text")
                 .attr("class", d => d.amount ? "link-label money" : "link-label")
                 .attr("dy", -5)
                 .text(d => d.amount ? d.amount : d.type);
 
-            node = g.append("g").selectAll("circle")
-                .data(data.nodes).enter().append("circle")
+            let node = g.append("g").selectAll("circle")
+                .data(nodes).enter().append("circle")
                 .attr("r", d => d.size)
-                .attr("fill", d => colorScale[d.group])
-                .attr("stroke", "#fff").attr("stroke-width", 2).attr("stroke-opacity", 0.8)
-                .style("filter", "drop-shadow(0 0 4px rgba(255,255,255,0.3))")
-                .style("cursor", "crosshair") 
+                .attr("fill", d => colorScale[d.group] || "#999") // Color fallback
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2)
+                .attr("stroke-opacity", 0.8)
                 .call(d3.drag()
                     .on("start", dragstarted)
                     .on("drag", dragged)
                     .on("end", dragended));
 
-            label = g.append("g").selectAll("text")
-                .data(data.nodes).enter().append("text")
+            let label = g.append("g").selectAll("text")
+                .data(nodes).enter().append("text")
                 .text(d => d.label)
-                .attr("font-size", d => d.group >= 6 ? "9px" : "11px")
-                .attr("fill", "#e2e8f0").attr("font-weight", "600")
+                .attr("font-size", "10px")
+                .attr("fill", "#e2e8f0")
                 .attr("class", "node-label") 
-                .attr("dx", d => d.size + 6).attr("dy", 4)
-                .style("pointer-events", "auto") 
-                .style("text-shadow", "0 2px 4px rgba(0,0,0,0.8)")
-                .call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended));
+                .attr("dx", d => d.size + 6)
+                .attr("dy", 4);
 
-            // 9. ATTACH EVENTS
-            node.on("click", (event, d) => {
-                event.stopPropagation();
-                const scale = 2.5;
-                const transform = d3.zoomIdentity
-                    .translate(width / 2, height / 2)
-                    .scale(scale)
-                    .translate(-d.x, -d.y);
-                
-                svg.transition().duration(750).call(zoomBehavior.transform, transform);
-                
-                highlightNode(d);
-                showTooltip(d, event.pageX, event.pageY);
-            })
-            .on("mouseover", (event, d) => {
-                highlightNode(d);
-                showTooltip(d, event.pageX, event.pageY);
-            })
-            .on("mouseout", (event, d) => {
-                resetSelection();
-            });
-
-            label.on("click", (event, d) => {
-                event.stopPropagation();
-                if (d.url) {
-                    window.open(d.url, '_blank');
-                }
-            })
-            .on("mouseover", (event, d) => {
-            highlightNode(d);
-            })
-            .on("mouseout", (event, d) => {
-            resetSelection(); 
-            });
-
-            svg.on("click", (event) => {
-                if (event.target.tagName === 'svg') {
-                    // Background click
-                }
-            });
-
-            if(invBox && breakdown) {
-                invBox.addEventListener('mouseenter', () => {
-                    breakdown.style.opacity = '1';
+            // --- INTERACCIONES Y BUSCADOR ---
+            
+            // Zoom
+            const zoomBehavior = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
                 });
-                invBox.addEventListener('mouseleave', () => {
-                    breakdown.style.opacity = '0';
+            svg.call(zoomBehavior);
+
+            // Funciones de Click/Hover
+            function highlightNode(d) {
+                // Reset previo
+                node.attr("stroke", "#fff").attr("stroke-width", 2);
+                link.attr("stroke-opacity", 0.1);
+                linkLabel.style("opacity", 0.1);
+
+                // Highlight actual
+                const relatedLinks = links.filter(l => l.source.id === d.id || l.target.id === d.id);
+                const relatedNodeIds = new Set();
+                relatedLinks.forEach(l => {
+                    relatedNodeIds.add(l.source.id);
+                    relatedNodeIds.add(l.target.id);
                 });
+
+                node.filter(n => n.id === d.id || relatedNodeIds.has(n.id))
+                    .attr("stroke", "#22d3ee")
+                    .attr("stroke-width", 4);
+
+                link.filter(l => l.source.id === d.id || l.target.id === d.id)
+                    .attr("stroke-opacity", 1)
+                    .attr("stroke-width", 2);
+                
+                linkLabel.filter(l => l.source.id === d.id || l.target.id === d.id)
+                    .style("opacity", 1);
             }
 
-           // --- BUSCADOR REPARADO ---
+            node.on("click", (event, d) => {
+                event.stopPropagation();
+                highlightNode(d);
+                // Tooltip manual
+                tooltip.style("opacity", 1)
+                       .html(`<b>${d.label}</b><br>${d.desc}`)
+                       .style("left", (event.pageX + 20) + "px")
+                       .style("top", (event.pageY - 20) + "px");
+            });
+
+            svg.on("click", () => {
+                // Click en fondo resetea
+                node.attr("stroke", "#fff").attr("stroke-width", 2);
+                link.attr("stroke-opacity", 0.3);
+                linkLabel.style("opacity", 1);
+                tooltip.style("opacity", 0);
+            });
+
+            // BUSCADOR (REPARADO)
+            const searchInput = document.getElementById('search-input');
             searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase().trim();
+                if (!term) return;
 
-                // 1. Si borras el texto, volver a la vista normal
-                if(term.length === 0) {
-                    resetSelection();
-                    return;
-                }
-
-                // 2. Buscar el nodo (Protegido contra errores si falta el label)
-                const found = data.nodes.find(n => {
-                    // Convertimos a string por seguridad antes de buscar
-                    const labelText = n.label ? String(n.label).toLowerCase() : "";
-                    const idText = n.id ? String(n.id).toLowerCase() : "";
-                    
-                    return labelText.includes(term) || idText.includes(term);
-                });
-
-                // 3. Si lo encuentra, hacer Zoom y resaltar
-                if(found) {
-                    // Resaltar visualmente
+                const found = nodes.find(n => n.label.toLowerCase().includes(term));
+                
+                if (found) {
                     highlightNode(found);
-                    showTooltip(found, width/2, height/2); // Mostrar tooltip en el centro temporalmente
-
-                    // Calcular coordenadas para el zoom
-                    const scale = 2.5; 
+                    
+                    // Centrar cámara
+                    const scale = 2;
                     const transform = d3.zoomIdentity
                         .translate(width / 2, height / 2)
                         .scale(scale)
                         .translate(-found.x, -found.y);
-
-                    // Transición suave de la cámara
+                    
                     svg.transition().duration(750).call(zoomBehavior.transform, transform);
-                } else {
-                    // Opcional: Si no encuentra nada, podrías quitar la selección anterior
-                    // resetSelection(); 
                 }
             });
+
+
+            // Funciones Drag
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            // Loop de animación
             simulation.on("tick", () => {
-                link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
-                linkLabel.attr("x", d => (d.source.x + d.target.x) / 2).attr("y", d => (d.source.y + d.target.y) / 2);
-                node.attr("cx", d => d.x).attr("cy", d => d.y);
-                label.attr("x", d => d.x).attr("y", d => d.y);
-                
-                if (width > 0 && height > 0) {
-                    updateIndicators(d3.zoomTransform(svg.node()));
-                }
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                linkLabel
+                    .attr("x", d => (d.source.x + d.target.x) / 2)
+                    .attr("y", d => (d.source.y + d.target.y) / 2);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                label
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
             });
 
-            window.addEventListener('resize', () => {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
-                svg.attr("width", w).attr("height", h);
-                simulation.force("center", d3.forceCenter(w / 2, h / 2));
-                simulation.alpha(0.3).restart();
-                updateIndicators(d3.zoomTransform(svg.node()));
-            });
-
-        }).catch(function(error) {
-            console.error("Error cargando los CSV:", error);
-            // Mostrar mensaje en pantalla si falla la carga
-            d3.select("body").append("div")
-                .style("position", "absolute")
-                .style("top", "50%")
-                .style("left", "50%")
-                .style("transform", "translate(-50%, -50%)")
-                .style("color", "red")
-                .style("background", "black")
-                .style("padding", "20px")
-                .text("Error cargando los datos. Revisa la consola (F12) y que la carpeta /data exista.");
+        }).catch(err => {
+            console.error("ERROR FATAL CARGANDO DATOS:", err);
+            alert("Error cargando CSV. Mira la consola (F12).");
         });
-
-    }); // End of window.load
+    });
 </script>
 </body>
 </html>
