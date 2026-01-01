@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>European 6G Ecosystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617; /* Very dark slate/black */
+            color: #e2e8f0;
+            overflow: hidden; 
+        }
+        
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+        }
+
+        /* --- CSS TRANSITIONS --- */
+        circle {
+            transition: stroke 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease, r 0.3s ease;
+        }
+        
+        /* Text Label Styling - Interactive */
+        text.node-label {
+            transition: fill 0.2s ease, font-weight 0.2s ease;
+            cursor: pointer; 
+        }
+        
+        text.node-label:hover {
+            fill: #22d3ee !important; /* Cyan-400 on hover */
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); 
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 300px;
+            z-index: 50;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .action-hint {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #fbbf24; /* Amber-400 */
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            white-space: nowrap;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 5px currentColor;
+            flex-shrink: 0;
+        }
+
+        .count-badge {
+            margin-left: auto;
+            padding-left: 8px;
+            font-weight: bold;
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+        
+        .total-investment-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .total-investment-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6ee7b7;
+            margin-bottom: 2px;
+        }
+        
+        .total-investment-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .link-label {
+            font-size: 10px;
+            font-family: 'Inter', sans-serif;
+            fill: #94a3b8;
+            text-anchor: middle;
+            paint-order: stroke;
+            stroke: #020617; /* Halo background */
+            stroke-width: 4px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            pointer-events: none;
+        }
+        
+        .link-label.money {
+            fill: #4ade80; /* Neon Green */
+            font-weight: 800; 
+            font-size: 12px;
+            filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.4));
+        }
+
+        /* Indicator Styles */
+        .indicator {
+            cursor: pointer;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.8));
+        }
+        
+        .indicator path {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke 0.2s;
+            transform-origin: center;
+            transform-box: fill-box; 
+        }
+        
+        .indicator:hover path {
+            transform: scale(1.5); 
+            stroke: #fff; 
+        }
+
+        /* Interactive Node Style */
+        .node-interactive {
+            cursor: pointer;
+        }
+
+        /* Scrollbar for the overlay */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UI Overlay -->
+    <div class="absolute top-4 left-4 z-10 bg-slate-900/80 backdrop-blur-md p-5 rounded-xl shadow-2xl border border-slate-700 max-w-sm max-h-[90vh] overflow-y-auto flex flex-col gap-4">
+        <div>
+            <h1 class="text-xl font-bold text-white mb-1">European 6G Ecosystem</h1>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                Funding flows and strategic relationships.
+            </p>
+            
+            <!-- Total Investment Box -->
+            <div class="total-investment-box">
+                <div class="total-investment-label">Est. Total Investment</div>
+                <div class="total-investment-value">&gt; €3.8 Billion</div>
+            </div>
+
+            <p class="text-xs text-slate-400">
+                <span class="text-amber-400 font-semibold mt-1 block border-t border-slate-600 pt-2">Controls:</span>
+                • Click <strong>Circle</strong> to Zoom/Focus.<br>
+                • Click <strong>Name</strong> to Visit Website.
+            </p>
+        </div>
+
+        <!-- Search Input -->
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input type="text" id="search-input" class="block w-full p-2 pl-10 text-sm text-white border border-slate-600 rounded-lg bg-slate-800 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400" placeholder="Search (e.g. 6G-XR, Matsuko, VTT)...">
+        </div>
+        
+        <!-- Legend -->
+        <div class="space-y-2 border-t border-slate-700 pt-4">
+            <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Legend</h3>
+            <div class="legend-item"><div class="legend-color" style="background: #60a5fa; color: #60a5fa;"></div>EU Institution / Governance <span id="count-1" class="count-badge"></span></div>
+            <div class="legend-item"><div class="legend-color" style="background: #34d399; color: #34d399;"></div>National Gov / Hub <span id="count-2" class="count-badge"></span></div>
+            <div class="legend-item"><div class="legend-color" style="background: #f87171; color: #f87171;"></div>Private Company <span id="count-3" class="count-badge"></span></div>
+            <div class="legend-item"><div class="legend-color" style="background: #c084fc; color: #c084fc;"></div>Project (Flagship/General) <span id="count-4" class="count-badge"></span></div>
+            <div class="legend-item"><div class="legend-color" style="background: #f472b6; color: #f472b6;"></div>Funding Calls (Stream) <span id="count-calls" class="count-badge"></span></div>
+            <div class="legend-item"><div class="legend-color" style="background: #fbbf24; color: #fbbf24;"></div>Research / University <span id="count-5" class="count-badge"></span></div>
+        </div>
+    </div>
+    
+    <!-- Footer Branding -->
+    <div class="absolute bottom-4 left-4 z-10 text-white text-sm font-bold tracking-widest opacity-80 pointer-events-none" style="font-family: 'Inter', sans-serif;">
+        stop6g.eu
+    </div>
+
+    <!-- Tooltip Element -->
+    <div id="tooltip" class="tooltip"></div>
+
+    <!-- Graph Container -->
+    <div id="graph-container"></div>
+
+    <script>
+        // 1. DATA DEFINITION
+        const data = {
+            nodes: [
+                // Group 1: EU/Governance
+                { id: "SNS JU", group: 1, label: "SNS JU", size: 30, desc: "Public-Private Partnership. Budget: €900M EU + €900M Industry = €1.8B.", url: "https://smart-networks.europa.eu/" },
+                { id: "EU Commission", group: 1, label: "EU Commission", size: 25, desc: "Provides public funding under Horizon Europe.", url: "https://research-and-innovation.ec.europa.eu/" },
+                { id: "NextGenEU", group: 1, label: "NextGenerationEU", size: 28, desc: "EU Recovery Instrument. Primary source for UNICO (Spain) & RESTART (Italy).", url: "https://next-generation-eu.europa.eu/" }, 
+                { id: "6G-IA", group: 1, label: "6G-IA", size: 20, desc: "Industry Association. Represents private sector matching funds.", url: "https://6g-ia.eu/" },
+                { id: "Eurescom", group: 1, label: "Eurescom", size: 15, desc: "Provides administrative support to SNS JU.", url: "https://www.eurescom.eu/" },
+                { id: "EDF", group: 1, label: "EDF (Defence Fund)", size: 20, desc: "European Defence Fund. Funding dual-use/military projects like VANTAGE.", url: "https://defence-industry-space.ec.europa.eu/eu-defence-industry/european-defence-fund-edf_en" },
+
+                // Group 2: National Hubs
+                { id: "BMBF", group: 2, label: "BMBF (DE)", size: 20, desc: "German Federal Ministry. Total program volume ~€700M.", url: "https://www.bmbf.de/bmbf/en/home/home.html" },
+                { id: "France 2030", group: 2, label: "France 2030", size: 20, desc: "French National Strategy. Focused on strategic autonomy.", url: "https://www.gouvernement.fr/france-2030" },
+                { id: "PEPR Networks", group: 2, label: "PEPR Networks", size: 18, desc: "Priority Research Program for Future Networks. Co-led by CEA, CNRS, IMT.", url: "https://www.pepr-reseaux-futur.fr/" },
+                { id: "France 6G", group: 2, label: "France 6G", size: 16, desc: "National platform launched by IMT to unite ecosystem & standardization.", url: "https://www.imt.fr/en/" },
+                { id: "Business Finland", group: 2, label: "Business Finland", size: 18, desc: "Finnish innovation funding agency.", url: "https://www.businessfinland.fi/en" },
+                { id: "Spanish Gov", group: 2, label: "Spanish Gov (UNICO)", size: 18, desc: "UNICO I+D 6G Program funded by NextGenEU (>€100M).", url: "https://avancedigital.mineco.gob.es/banda-ancha/plan-unico/Paginas/plan-unico.aspx" },
+                { id: "UK Gov", group: 2, label: "UK Gov", size: 18, desc: "Wireless Infrastructure Strategy. Associated to Horizon Europe (2024).", url: "https://www.gov.uk/government/publications/wireless-infrastructure-strategy" },
+                { id: "RESTART", group: 2, label: "RESTART (Italy)", size: 18, desc: "Italian program for Future Telecoms. €118M budget (PNRR).", url: "https://www.restart-project.it/" },
+                { id: "FNS", group: 2, label: "FNS (Netherlands)", size: 18, desc: "Future Network Services. ~€203M National Growth Fund.", url: "https://futurenetworkservices.nl/" },
+                { id: "BELSPO", group: 2, label: "BELSPO (Belgium)", size: 18, desc: "Belgian Science Policy Office.", url: "https://www.belspo.be/" },
+                { id: "FCT", group: 2, label: "FCT (Portugal)", size: 18, desc: "Fundação para a Ciência e a Tecnologia. Public funding agency.", url: "https://www.fct.pt/" },
+                { id: "NCBR", group: 2, label: "NCBR (Poland)", size: 18, desc: "National Centre for Research and Development. Polish funding agency.", url: "https://www.gov.pl/web/ncbr" },
+                { id: "Polish Presidency", group: 2, label: "Polish Presidency '25", size: 18, desc: "EU Council Presidency 2025. Pushing 'Digital Networks Act'.", url: "https://pl2025.eu/" },
+                { id: "SAL", group: 2, label: "Silicon Austria Labs", size: 18, desc: "Austria's top research center for EBS. Focus on 6G Sensing & Hardware.", url: "https://silicon-austria-labs.com/" },
+                { id: "SERI", group: 2, label: "SERI (Switzerland)", size: 18, desc: "Swiss State Secretariat for Education. Funds Swiss partners in SNS JU (e.g. 6G-XR).", url: "https://www.sbfi.admin.ch/sbfi/en/home.html" },
+
+                // Group 3: Corporates
+                { id: "Nokia", group: 3, label: "Nokia", size: 24, desc: "Leading Hexa-X, 6G-ANNA. Chair of 6G-IA. Coordinator of SUSTAIN-6G.", url: "https://www.nokia.com/networks/6g/" },
+                { id: "Ericsson", group: 3, label: "Ericsson", size: 22, desc: "Tech Manager in Hexa-X. Focus on sustainability.", url: "https://www.ericsson.com/en/6g" },
+                { id: "Deutsche Telekom", group: 3, label: "D. Telekom", size: 20, desc: "Leading operator. Focus on 6G-TakeOff (NTN).", url: "https://www.telekom.com/en/company/digital-responsibility/details/6g-research-1033604" },
+                { id: "Orange", group: 3, label: "Orange", size: 20, desc: "Major French Operator. Active in PEPR & France 6G. Tech Manager of SUSTAIN-6G.", url: "https://hellofuture.orange.com/en/6g/" },
+                { id: "Telefónica", group: 3, label: "Telefónica", size: 22, desc: "Major operator. Heavily involved in UNICO & 6G-IA.", url: "https://www.telefonica.com/en/communication-room/blog/6g-technology/" },
+                { id: "Thales", group: 3, label: "Thales", size: 18, desc: "Security & Space. Key player in French ecosystem.", url: "https://www.thalesgroup.com/en" },
+                { id: "Airbus", group: 3, label: "Airbus", size: 18, desc: "Defense & Space. Key for NTN.", url: "https://www.airbus.com/en/products-services/defence-space" },
+                { id: "TIM", group: 3, label: "TIM (Telecom Italia)", size: 18, desc: "Key partner in RESTART program.", url: "https://www.gruppotim.it/en.html" },
+                { id: "IS-Wireless", group: 3, label: "IS-Wireless", size: 18, desc: "Polish pioneer in Open RAN & 6G technologies.", url: "https://is-wireless.com/" },
+                { id: "Orange PL", group: 3, label: "Orange PL", size: 16, desc: "Orange Poland. Active innovation arm in Warsaw.", url: "https://biuroprasowe.orange.pl/" },
+                { id: "LMT", group: 3, label: "LMT (Latvia)", size: 18, desc: "Latvian Mobile Telephone. Leading VANTAGE drone project & 6G-IA member.", url: "https://innovations.lmt.lv/en" },
+                { id: "Altice Labs", group: 3, label: "Altice Labs (PT)", size: 18, desc: "Innovation center in Aveiro. Focus on optical networks & 6G.", url: "https://www.alticelabs.com/" },
+                { id: "KPN", group: 3, label: "KPN (NL)", size: 18, desc: "Dutch telecom operator. Member of 6G-IA.", url: "https://www.kpn.com/" },
+                { id: "Swisscom", group: 3, label: "Swisscom (CH)", size: 18, desc: "Leading Swiss operator. Partner in 6G-XR and 5G-PPP projects.", url: "https://www.swisscom.ch/en/business/enterprise/topics/innovation.html" },
+                { id: "NXP", group: 3, label: "NXP (AT)", size: 18, desc: "Semiconductors & Security Hardware. Key Austrian industry player.", url: "https://www.nxp.com/" },
+                { id: "WINGS ICT", group: 3, label: "WINGS ICT (GR)", size: 18, desc: "Greek SME driving 6G AI & vertical platforms. Partner in Hexa-X & SUSTAIN-6G.", url: "https://www.wings-ict-solutions.eu/" },
+                { id: "Telekom Slovenije", group: 3, label: "Telekom Slovenije", size: 16, desc: "Leading Slovenian operator. Advanced 5G SA & innovation pilot.", url: "https://www.telekom.si/" },
+                { id: "Siemens", group: 3, label: "Siemens", size: 18, desc: "Focus on Industrial 6G & Digital Twins. Partner in SUSTAIN-6G & 6G-ANNA.", url: "https://www.siemens.com/global/en.html" },
+                { id: "John Deere", group: 3, label: "John Deere", size: 16, desc: "Smart Agriculture. Partner in SUSTAIN-6G for vertical use cases.", url: "https://www.deere.com/" },
+                { id: "OTE", group: 3, label: "OTE (Greece)", size: 16, desc: "Greek Telecom. Key partner in 6G-PATH pilots.", url: "https://www.cosmote.gr/" },
+                { id: "Orange RO", group: 3, label: "Orange Romania", size: 16, desc: "Leading Education vertical pilots in 6G-PATH.", url: "https://www.orange.ro/" },
+                { id: "Vodafone", group: 3, label: "Vodafone", size: 18, desc: "Global Operator. Partner in 6G-ANNA.", url: "https://www.vodafone.com/" },
+                { id: "Bosch", group: 3, label: "Bosch", size: 18, desc: "Industrial & Automotive giant. Partner in 6G-ANNA.", url: "https://www.bosch.com/" },
+                { id: "Rohde & Schwarz", group: 3, label: "Rohde & Schwarz", size: 16, desc: "Test & Measurement leader. Partner in 6G-ANNA.", url: "https://www.rohde-schwarz.com/" },
+                { id: "Atos", group: 3, label: "Atos (Eviden)", size: 18, desc: "Digital integration giant. Key partner in SUNRISE-6G federation.", url: "https://eviden.com/" },
+                { id: "Matsuko", group: 3, label: "Matsuko (SK)", size: 16, desc: "Holographic calling tech. 6G-XR SME partner.", url: "https://www.matsuko.com/" },
+                { id: "Capgemini", group: 3, label: "Capgemini (ES)", size: 16, desc: "Integration & Cloud. Partner in 6G-XR.", url: "https://www.capgemini.com/" },
+
+                // Group 4: Projects
+                { id: "Hexa-X-II", group: 4, label: "Hexa-X-II", size: 22, desc: "The European 6G System Blueprint.", url: "https://hexa-x-ii.eu/" },
+                { id: "RISE-6G", group: 4, label: "RISE-6G", size: 16, desc: "Reconfigurable Intelligent Surfaces (RIS).", url: "https://rise-6g.eu/" },
+                { id: "6G-ANNA", group: 4, label: "6G-ANNA", size: 22, desc: "German Industrial Lighthouse Project. Led by Nokia.", url: "https://www.6g-anna.de/" },
+                { id: "ENABLE-6G", group: 4, label: "ENABLE-6G", size: 16, desc: "Privacy & Energy Efficiency. Led by IMDEA Networks.", url: "https://networks.imdea.org/research/projects/enable-6g/" },
+                { id: "EuCNC 2025", group: 4, label: "EuCNC 2025 (Poznań)", size: 16, desc: "Major 6G Summit hosted in Poland. Key ecosystem gathering.", url: "https://www.eucnc.eu/" },
+                { id: "VANTAGE", group: 4, label: "VANTAGE (Drones)", size: 16, desc: "Next-Gen Tactical Drones (5G-Adv/6G Path). €10M EDF Grant.", url: "https://labsoflatvia.com/en/news/lmt-to-join-forces-with-foreign-partners-to-develop-next-generation-tactical-drones" },
+                { id: "XTRUST-6G", group: 4, label: "XTRUST-6G", size: 18, desc: "Zero-Trust Security. Coordinated by CERTH (Greece) with 19 partners.", url: "https://xtrust-6g.eu/" },
+                { id: "SUSTAIN-6G", group: 8, label: "SUSTAIN-6G", size: 20, desc: "Sustainability Lighthouse Project. Led by Nokia, Orange & Eurescom.", url: "https://sustain-6g.eu/" },
+                { id: "6G-XR", group: 4, label: "6G-XR", size: 18, desc: "Holographic comms & XR. Key Swiss participation & mixed EU funding.", url: "https://6g-xr.eu/" },
+                { id: "SUNRISE-6G", group: 4, label: "SUNRISE-6G", size: 16, desc: "Federation of 6G Infrastructures. Coordinated by ISI/Athena (Greece).", url: "https://sunrise6g.eu/" },
+                { id: "6G-VERSUS", group: 4, label: "6G-VERSUS", size: 16, desc: "Sustainability & Vertical Pilots (Bulgaria, Greece).", url: "https://6g-versus.eu/" },
+                { id: "6G-SANDBOX", group: 6, label: "6G-SANDBOX", size: 12, desc: "Experimental infrastructure.", url: "https://6g-sandbox.eu/" },
+                { id: "6G-PATH", group: 7, label: "6G-PATH", size: 20, desc: "Pilots & Trials in Health, Education, Farming & Cities.", url: "https://6gpath.eu/" },
+
+                // Group 5: Research
+                { id: "6G Flagship", group: 5, label: "6G Flagship", size: 18, desc: "Univ. of Oulu. €251M budget (2018-2026). Pioneer of 6G vision.", url: "https://www.6gflagship.com/" },
+                { id: "CEA-Leti", group: 5, label: "CEA-Leti", size: 16, desc: "French Sub-THz hardware. Co-director of PEPR.", url: "https://www.leti-cea.com/cea-tech/leti/english" },
+                { id: "CNRS", group: 5, label: "CNRS", size: 17, desc: "French National Centre for Scientific Research. Co-director of PEPR.", url: "https://www.cnrs.fr/en" },
+                { id: "IMT", group: 5, label: "Institut Mines-Télécom", size: 17, desc: "Leading French engineering group. Co-director of PEPR & France 6G.", url: "https://www.imt.fr/en/" },
+                { id: "Fraunhofer", group: 5, label: "Fraunhofer", size: 16, desc: "German applied research institutes.", url: "https://www.fraunhofer.de/en.html" },
+                { id: "IMDEA Networks", group: 5, label: "IMDEA Networks", size: 18, desc: "Madrid based. Leading TUCAN6-CM & ENABLE-6G.", url: "https://networks.imdea.org/" },
+                { id: "Univ Bristol", group: 5, label: "Univ Bristol", size: 16, desc: "Leads JOINER testbed in UK. Horizon Europe Partner.", url: "https://www.bristol.ac.uk/engineering/research/smart/" },
+                { id: "CNIT", group: 5, label: "CNIT (Italy)", size: 16, desc: "National Consortium for Telecommunications. Key in RESTART.", url: "https://www.cnit.it/en/" },
+                { id: "i2CAT", group: 5, label: "i2CAT (Spain)", size: 16, desc: "Catalan research center. Active in UNICO projects.", url: "https://i2cat.net/" },
+                { id: "TNO", group: 5, label: "TNO (Netherlands)", size: 16, desc: "Leading the FNS program.", url: "https://www.tno.nl/en/" },
+                { id: "TU Delft", group: 5, label: "TU Delft", size: 16, desc: "Technical University. FNS Partner.", url: "https://www.tudelft.nl/en/" },
+                { id: "TalTech", group: 5, label: "TalTech (Estonia)", size: 16, desc: "Tallinn University of Technology. Focus on 6G security & autonomous systems.", url: "https://taltech.ee/en/comsys" },
+                { id: "Photonics LT", group: 5, label: "Photonics LT (Lithuania)", size: 16, desc: "Lithuanian Laser & Photonics Cluster. Crucial for optical/THz comms.", url: "https://ltoptics.org/en/" },
+                { id: "IMEC", group: 5, label: "IMEC (Belgium)", size: 22, desc: "World-leading R&D hub in nanoelectronics and digital technologies.", url: "https://www.imec-int.com/en" },
+                { id: "KU Leuven", group: 5, label: "KU Leuven", size: 16, desc: "Top-ranked university, partner of IMEC.", url: "https://www.kuleuven.be/english/" },
+                { id: "IT Portugal", group: 5, label: "IT (Portugal)", size: 18, desc: "Instituto de Telecomunicações. Key 6G research institute.", url: "https://www.it.pt/" },
+                { id: "U. Aveiro", group: 5, label: "Univ. Aveiro", size: 16, desc: "5G/6G Competence Center. Linked to Altice & IT.", url: "https://www.ua.pt/" },
+                { id: "IJS", group: 5, label: "Institute Jožef Stefan (SI)", size: 16, desc: "Slovenia's leading research institute. AI & Robotics focus.", url: "https://www.ijs.si/" },
+                { id: "ISI/Athena", group: 5, label: "ISI/Athena (GR)", size: 16, desc: "Industrial Systems Institute. Coordinator of SUNRISE-6G.", url: "https://www.isi.gr/en/" },
+                { id: "CERTH", group: 5, label: "CERTH (GR)", size: 18, desc: "Centre for Research & Technology Hellas. XTRUST-6G Coordinator.", url: "https://www.certh.gr/" },
+                { id: "Univ Portsmouth", group: 5, label: "Univ. Portsmouth (UK)", size: 16, desc: "UK Partner in XTRUST-6G.", url: "https://www.port.ac.uk/" },
+                { id: "PoliTo", group: 5, label: "Politecnico di Torino", size: 16, desc: "Key academic partner in SUSTAIN-6G.", url: "https://www.polito.it/en/" },
+                { id: "U. Malaga", group: 5, label: "Univ. Málaga", size: 16, desc: "Active in 6G-PATH. Focus on mobile networks.", url: "https://www.uma.es/" },
+                { id: "Karlstad U", group: 5, label: "Karlstad Univ (SE)", size: 16, desc: "Swedish partner in 6G-PATH pilots.", url: "https://www.kau.se/en" },
+                { id: "TU Dresden", group: 5, label: "TU Dresden", size: 16, desc: "Tactile Internet & 5G/6G Lab. Partner in 6G-ANNA.", url: "https://tu-dresden.de/" },
+                { id: "TU Munich", group: 5, label: "TU Munich", size: 16, desc: "Robotics & Networking. Partner in 6G-ANNA.", url: "https://www.tum.de/en/" },
+                { id: "RWTH Aachen", group: 5, label: "RWTH Aachen", size: 16, desc: "Communication engineering. Partner in 6G-ANNA.", url: "https://www.rwth-aachen.de/go/id/a/?lidx=1" },
+                { id: "KIT", group: 5, label: "KIT (Karlsruhe)", size: 16, desc: "Network architecture. Partner in 6G-ANNA.", url: "https://www.kit.edu/english/index.php" },
+                { id: "ETH Zurich", group: 5, label: "ETH Zurich", size: 16, desc: "Global top-tier university. AI & Wireless. Partner in 6G-XR.", url: "https://ethz.ch/en.html" },
+                { id: "EPFL", group: 5, label: "EPFL (CH)", size: 16, desc: "Lausanne Polytechnic. Robotics & new materials.", url: "https://www.epfl.ch/en/" },
+                { id: "AIT Austria", group: 5, label: "AIT (Austria)", size: 16, desc: "Austrian Institute of Technology. Resilient systems & cybersecurity.", url: "https://www.ait.ac.at/en/" },
+                { id: "TU Wien", group: 5, label: "TU Wien", size: 16, desc: "Vienna Univ. of Tech. Millimeter-wave research.", url: "https://www.tuwien.at/en/" },
+                { id: "VTT", group: 5, label: "VTT (Finland)", size: 18, desc: "Leading research institute. Key partner in 6G-XR.", url: "https://www.vttresearch.com/" },
+                { id: "Vicomtech", group: 5, label: "Vicomtech (Spain)", size: 16, desc: "Applied Research in AI & Visual Computing. 6G-XR partner.", url: "https://www.vicomtech.org/" },
+
+                // Group 6-8: Calls
+                { id: "Call 1", group: 6, label: "Call 1 (2022)", size: 20, desc: "Focus: 5G Evolution. Approx ~€380M budget.", url: "https://smart-networks.europa.eu/project-portfolio/" },
+                { id: "Call 2", group: 7, label: "Call 2 (2023)", size: 20, desc: "Focus: Detailed Design. Approx ~€130M budget.", url: "https://smart-networks.europa.eu/project-portfolio/" },
+                { id: "Call 3", group: 8, label: "Call 3 (2024)", size: 20, desc: "Focus: Consolidation & Pilots.", url: "https://smart-networks.europa.eu/project-portfolio/" }
+            ],
+            links: [
+                { source: "EU Commission", target: "SNS JU", amount: "€900M", type: "Public Funding" },
+                { source: "6G-IA", target: "SNS JU", amount: "€900M", type: "Private Match" },
+                { source: "SNS JU", target: "Eurescom", type: "Admin Support" },
+                { source: "NextGenEU", target: "Spanish Gov", amount: "Recovery Funds", type: "Funding Source" },
+                { source: "NextGenEU", target: "RESTART", amount: "PNRR Funds", type: "Funding Source" },
+                { source: "SNS JU", target: "Call 1", amount: "~€380M", type: "Allocation" },
+                { source: "SNS JU", target: "Call 2", amount: "~€130M", type: "Allocation" },
+                { source: "SNS JU", target: "Call 3", amount: "TBD", type: "Allocation" },
+                { source: "BMBF", target: "6G-ANNA", amount: "€38.4M", type: "Grant (70%)" },
+                { source: "BMBF", target: "Fraunhofer", amount: "~€70M (Hubs)", type: "Hub Funding" },
+                { source: "France 2030", target: "PEPR Networks", amount: "€65M", type: "Funding Program" },
+                { source: "PEPR Networks", target: "CEA-Leti", type: "Co-Director" },
+                { source: "PEPR Networks", target: "CNRS", type: "Co-Director" },
+                { source: "PEPR Networks", target: "IMT", type: "Co-Director" },
+                { source: "IMT", target: "France 6G", type: "Launches" },
+                { source: "Orange", target: "France 6G", type: "Member" },
+                { source: "Thales", target: "France 6G", type: "Member" },
+                { source: "France 2030", target: "Orange", type: "Key Industry" },
+                { source: "Business Finland", target: "6G Flagship", amount: "€251M", type: "Total Prg" },
+                { source: "Spanish Gov", target: "IMDEA Networks", amount: "UNICO I+D", type: "Grant" },
+                { source: "Spanish Gov", target: "Telefónica", amount: "UNICO", type: "Grant/Aid" },
+                { source: "Spanish Gov", target: "i2CAT", amount: "UNICO", type: "Grant" },
+                { source: "UK Gov", target: "Univ Bristol", amount: "£100M", type: "Strategy" },
+                { source: "RESTART", target: "CNIT", amount: "Partner", type: "Research" },
+                { source: "RESTART", target: "TIM", amount: "Partner", type: "Industry" },
+                { source: "FNS", target: "TNO", amount: "Lead", type: "Coordination" },
+                { source: "FNS", target: "TU Delft", amount: "Partner", type: "Research" },
+                { source: "TNO", target: "Hexa-X-II", type: "Partner" },
+                { source: "TNO", target: "6G-IA", type: "Member" },
+                { source: "KPN", target: "6G-IA", type: "Member" },
+                { source: "KPN", target: "FNS", type: "Industry Partner" },
+                { source: "TU Delft", target: "6G-IA", type: "Member" },
+                { source: "NCBR", target: "SNS JU", type: "Partner Agency" },
+                { source: "Polish Presidency", target: "EU Commission", type: "Policy (DNA)" },
+                { source: "NCBR", target: "IS-Wireless", amount: "Grant", type: "R&D Funding" },
+                { source: "Orange PL", target: "NCBR", type: "Collaboration" },
+                { source: "Orange PL", target: "Orange", type: "Subsidiary" },
+                { source: "NCBR", target: "EuCNC 2025", type: "Host Country" },
+                { source: "SNS JU", target: "EuCNC 2025", type: "Organizer" },
+                { source: "LMT", target: "6G-IA", type: "Member" },
+                { source: "LMT", target: "VANTAGE", type: "Coordinator" },
+                { source: "EDF", target: "VANTAGE", amount: "€10M", type: "Defence Funding" },
+                { source: "TalTech", target: "XTRUST-6G", type: "Partner" },
+                { source: "SNS JU", target: "XTRUST-6G", type: "Funding" },
+                { source: "Photonics LT", target: "6G-IA", type: "Tech Input" },
+                { source: "BELSPO", target: "IMEC", type: "Funding" },
+                { source: "IMEC", target: "SNS JU", type: "Strategic Partner" },
+                { source: "IMEC", target: "KU Leuven", type: "Partner" },
+                { source: "IMEC", target: "Hexa-X-II", type: "Contributor" },
+                { source: "FCT", target: "IT Portugal", type: "Funding" },
+                { source: "Altice Labs", target: "IT Portugal", type: "Innovation Partner" },
+                { source: "Altice Labs", target: "SNS JU", type: "Partner" },
+                { source: "IT Portugal", target: "SNS JU", type: "Project Partner" },
+                { source: "U. Aveiro", target: "IT Portugal", type: "Affiliation" },
+                { source: "WINGS ICT", target: "6G-IA", type: "Member" },
+                { source: "WINGS ICT", target: "Hexa-X-II", type: "Partner" },
+                { source: "WINGS ICT", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "ISI/Athena", target: "SUNRISE-6G", type: "Coordinator" },
+                { source: "SNS JU", target: "SUNRISE-6G", type: "Funding" },
+                { source: "SNS JU", target: "6G-VERSUS", type: "Funding" },
+                { source: "Telekom Slovenije", target: "IJS", type: "Collaboration" },
+                { source: "Call 3", target: "SUSTAIN-6G", type: "Funds" },
+                { source: "Nokia", target: "SUSTAIN-6G", type: "Coordinator" },
+                { source: "Orange", target: "SUSTAIN-6G", type: "Tech Manager" },
+                { source: "Eurescom", target: "SUSTAIN-6G", type: "Innov Manager" },
+                { source: "Deutsche Telekom", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "Telefónica", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "TIM", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "6G Flagship", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "IMEC", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "CEA-Leti", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "PoliTo", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "Siemens", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "John Deere", target: "SUSTAIN-6G", type: "Partner" },
+                { source: "Call 2", target: "6G-PATH", type: "Funds" },
+                { source: "Altice Labs", target: "6G-PATH", type: "Partner" },
+                { source: "IT Portugal", target: "6G-PATH", type: "Partner" },
+                { source: "OTE", target: "6G-PATH", type: "Partner" },
+                { source: "Orange RO", target: "6G-PATH", type: "Partner" },
+                { source: "Telefónica", target: "6G-PATH", type: "R&D Partner" },
+                { source: "Airbus", target: "6G-PATH", type: "Partner" },
+                { source: "U. Malaga", target: "6G-PATH", type: "Partner" },
+                { source: "Karlstad U", target: "6G-PATH", type: "Partner" },
+                { source: "Fraunhofer", target: "6G-PATH", type: "Partner" },
+                { source: "Vodafone", target: "6G-ANNA", type: "Partner" },
+                { source: "Bosch", target: "6G-ANNA", type: "Partner" },
+                { source: "Rohde & Schwarz", target: "6G-ANNA", type: "Partner" },
+                { source: "TU Dresden", target: "6G-ANNA", type: "Partner" },
+                { source: "TU Munich", target: "6G-ANNA", type: "Partner" },
+                { source: "RWTH Aachen", target: "6G-ANNA", type: "Partner" },
+                { source: "KIT", target: "6G-ANNA", type: "Partner" },
+                { source: "Airbus", target: "6G-ANNA", type: "Partner" },
+                { source: "Siemens", target: "6G-ANNA", type: "Partner" },
+                { source: "Ericsson", target: "6G-ANNA", type: "Partner" },
+                { source: "Fraunhofer", target: "6G-ANNA", type: "Partner" },
+                { source: "SAL", target: "6G-IA", type: "Member" },
+                { source: "AIT Austria", target: "6G-IA", type: "Member" },
+                { source: "NXP", target: "SAL", type: "Industry Partner" },
+                { source: "TU Wien", target: "SAL", type: "Research Partner" },
+                { source: "AIT Austria", target: "XTRUST-6G", type: "Partner" },
+                { source: "SERI", target: "6G-XR", amount: "Funding (CH)", type: "National Grant" },
+                { source: "Swisscom", target: "6G-XR", type: "Partner" },
+                { source: "ETH Zurich", target: "6G-XR", type: "Partner" },
+                { source: "EPFL", target: "6G-IA", type: "Member" },
+                { source: "UK Gov", target: "EU Commission", amount: "Assoc.", type: "Horizon Europe Assoc." },
+                { source: "Univ Bristol", target: "6G-IA", type: "Member" },
+                { source: "CERTH", target: "XTRUST-6G", type: "Coordinator" },
+                { source: "Telefónica", target: "XTRUST-6G", type: "Partner" },
+                { source: "TalTech", target: "XTRUST-6G", type: "Partner" },
+                { source: "Telekom Slovenije", target: "XTRUST-6G", type: "Partner" },
+                { source: "Univ Portsmouth", target: "XTRUST-6G", type: "Partner" },
+                { source: "Ericsson", target: "XTRUST-6G", type: "Partner" },
+                { source: "Call 1", target: "Hexa-X-II", type: "Flagship Funding" },
+                { source: "Call 1", target: "6G-SANDBOX", type: "Funds" },
+                { source: "Nokia", target: "Hexa-X-II", type: "Project Lead" },
+                { source: "Ericsson", target: "Hexa-X-II", type: "Tech Manager" },
+                { source: "Nokia", target: "6G-ANNA", type: "Lead" },
+                { source: "Nokia", target: "6G-IA", type: "Chairs" },
+                { source: "Deutsche Telekom", target: "6G-IA", type: "Member" },
+                { source: "Telefónica", target: "6G-IA", type: "Member" },
+                { source: "Telefónica", target: "ENABLE-6G", type: "Partner" },
+                { source: "IMDEA Networks", target: "ENABLE-6G", type: "Coordination" },
+                { source: "Spanish Gov", target: "ENABLE-6G", amount: "UNICO", type: "Funding" },
+                { source: "i2CAT", target: "6G-IA", type: "Member" },
+                { source: "Orange", target: "6G-IA", type: "Member" },
+                { source: "Thales", target: "6G-IA", type: "Member" },
+                { source: "Airbus", target: "Thales", type: "Space/NTN Collab" },
+                { source: "CEA-Leti", target: "RISE-6G", type: "Coordination" },
+                { source: "6G Flagship", target: "SUNRISE-6G", type: "Infrastructure Provider" },
+                { source: "CEA-Leti", target: "SUNRISE-6G", type: "Infrastructure Provider" },
+                { source: "LMT", target: "SUNRISE-6G", type: "Infrastructure Provider" },
+                { source: "U. Malaga", target: "SUNRISE-6G", type: "Infrastructure Provider" },
+                { source: "Atos", target: "SUNRISE-6G", type: "Integration Partner" },
+                { source: "Atos", target: "6G-IA", type: "Member" },
+                { source: "NCBR", target: "SUNRISE-6G", type: "Partner Agency" },
+                { source: "VTT", target: "6G-XR", type: "Partner" },
+                { source: "Matsuko", target: "6G-XR", type: "Partner" },
+                { source: "Capgemini", target: "6G-XR", type: "Partner" },
+                { source: "Vicomtech", target: "6G-XR", type: "Partner" },
+                { source: "Telefónica", target: "6G-XR", type: "Partner" },
+                { source: "Ericsson", target: "6G-XR", type: "Partner" },
+                { source: "i2CAT", target: "6G-XR", type: "Partner" },
+                { source: "Call 2", target: "6G-XR", type: "Funds" }
+            ]
+        };
+
+        // 2. COUNTS LOGIC
+        const counts = { 1:0, 2:0, 3:0, 4:0, 5:0, 'calls':0 };
+        data.nodes.forEach(node => {
+            let g = node.group;
+            if (g >= 6 && g <= 8) g = 'calls';
+            if (counts[g] !== undefined) counts[g]++;
+        });
+
+        // Set counts immediately (script is deferred/at end of body)
+        const c1 = document.getElementById('count-1'); if(c1) c1.textContent = `(${counts[1]})`;
+        const c2 = document.getElementById('count-2'); if(c2) c2.textContent = `(${counts[2]})`;
+        const c3 = document.getElementById('count-3'); if(c3) c3.textContent = `(${counts[3]})`;
+        const c4 = document.getElementById('count-4'); if(c4) c4.textContent = `(${counts[4]})`;
+        const cCalls = document.getElementById('count-calls'); if(cCalls) cCalls.textContent = `(${counts['calls']})`;
+        const c5 = document.getElementById('count-5'); if(c5) c5.textContent = `(${counts[5]})`;
+
+        // 3. D3 CONFIGURATION & CONSTANTS
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const colorScale = {
+            1: "#60a5fa", 2: "#34d399", 3: "#f87171", 4: "#c084fc", 5: "#fbbf24", 6: "#f472b6", 7: "#ec4899", 8: "#db2777"
+        };
+
+        // 4. DOM SETUP
+        const svg = d3.select("#graph-container").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        svg.append("defs").selectAll("marker")
+            .data(["end"])
+            .enter().append("marker")
+            .attr("id", "arrow")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 25)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M0,-5L10,0L0,5")
+            .attr("fill", "#94a3b8"); 
+
+        const g = svg.append("g");
+        const indicatorsLayer = svg.append("g").attr("class", "indicators-layer");
+        const tooltip = d3.select("#tooltip");
+        const searchInput = document.getElementById('search-input');
+
+        // 5. VARIABLES FOR SELECTIONS (Declared here, assigned later)
+        let link, linkLabel, node, label;
+        let selectedNode = null; // State
+
+        // 6. HELPER FUNCTIONS DEFINITIONS
+        function updateIndicators(transform) {
+            const padding = 20;
+            // Filter important nodes
+            const importantNodes = data.nodes.filter(d => d.size >= 15);
+            
+            const indicatorsData = [];
+
+            importantNodes.forEach(d => {
+                const nx = transform.applyX(d.x);
+                const ny = transform.applyY(d.y);
+                
+                // If off-screen
+                if (nx < 0 || nx > width || ny < 0 || ny > height) {
+                    const cx = width / 2;
+                    const cy = height / 2;
+                    const angle = Math.atan2(ny - cy, nx - cx);
+                    
+                    let ix = nx;
+                    let iy = ny;
+                    
+                    // Clamp
+                    if (ix < padding) ix = padding;
+                    if (ix > width - padding) ix = width - padding;
+                    if (iy < padding) iy = padding;
+                    if (iy > height - padding) iy = height - padding;
+                    
+                    indicatorsData.push({
+                        node: d,
+                        x: ix,
+                        y: iy,
+                        angle: angle * (180 / Math.PI) 
+                    });
+                }
+            });
+
+            const indicators = indicatorsLayer.selectAll(".indicator")
+                .data(indicatorsData, d => d.node.id);
+            
+            indicators.exit().remove();
+            
+            const indicatorsEnter = indicators.enter().append("g")
+                .attr("class", "indicator")
+                .on("click", (event, d) => {
+                    // Navigate to node on indicator click
+                    const scale = 1.5;
+                    const transform = d3.zoomIdentity
+                        .translate(width / 2, height / 2)
+                        .scale(scale)
+                        .translate(-d.node.x, -d.node.y);
+                    
+                    svg.transition().duration(750)
+                        .call(zoomBehavior.transform, transform);
+                });
+
+            indicatorsEnter.append("path")
+                .attr("d", "M-6,-6 L0,0 L-6,6") 
+                .attr("fill", "none")
+                .attr("stroke-width", 3)
+                .attr("stroke-linecap", "round");
+
+            indicators.merge(indicatorsEnter)
+                .attr("transform", d => `translate(${d.x}, ${d.y}) rotate(${d.angle})`)
+                .select("path")
+                .attr("stroke", d => colorScale[d.node.group]); 
+        }
+
+        function highlightNode(d) {
+            // Safe check if selections exist
+            if (!link || !linkLabel || !node) return;
+
+            link.attr("stroke-opacity", 0.1);
+            linkLabel.style("opacity", 0.1);
+
+            const targetNode = node.filter(n => n === d);
+            targetNode
+                .transition().duration(300)
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 5)
+                .style("filter", "drop-shadow(0 0 20px " + colorScale[d.group] + ")");
+
+            link.filter(l => l.source === d || l.target === d)
+                .transition().duration(300)
+                .attr("stroke-opacity", 1)
+                .attr("stroke-width", 2.5);
+            
+            linkLabel.filter(l => l.source === d || l.target === d)
+                .style("opacity", 1);
+        }
+
+        function resetSelection() {
+            if (!node) return;
+            node.transition().duration(300)
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2)
+                .style("filter", "drop-shadow(0 0 4px rgba(255,255,255,0.3))");
+            
+            if (link) link.transition().duration(300).attr("stroke-opacity", 0.3);
+            if (linkLabel) linkLabel.style("opacity", 1);
+            tooltip.transition().duration(200).style("opacity", 0);
+        }
+
+        function showTooltip(d, x, y) {
+            tooltip.transition().duration(200).style("opacity", 1);
+            
+            tooltip.html(`
+                <div class="font-bold border-b border-gray-500/30 pb-1 mb-1" style="color:${colorScale[d.group]}">${d.label}</div>
+                <div class="text-gray-200 leading-snug">${d.desc}</div>
+            `)
+            .style("left", (x + 20) + "px")
+            .style("top", (y - 20) + "px");
+        }
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+            d3.select(this).style("cursor", "grabbing");
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+            d3.select(this).style("cursor", "grab");
+        }
+
+        // 7. SETUP BEHAVIORS
+        const zoomBehavior = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+                updateIndicators(event.transform);
+            });
+
+        svg.call(zoomBehavior);
+
+        const simulation = d3.forceSimulation(data.nodes)
+            .velocityDecay(0.3) 
+            .force("link", d3.forceLink(data.links).id(d => d.id).distance(d => {
+                if (d.source.group >= 6 || d.target.group >= 6) return 120; 
+                return 200; 
+            }))
+            .force("charge", d3.forceManyBody().strength(-500)) 
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collide", d3.forceCollide().radius(d => d.size + 25).strength(0.8));
+
+        // 8. DRAW ELEMENTS
+        link = g.append("g").selectAll("line")
+            .data(data.links).enter().append("line")
+            .attr("stroke", "#ffffff").attr("stroke-opacity", 0.3).attr("stroke-width", 1.5).attr("marker-end", "url(#arrow)");
+
+        linkLabel = g.append("g").selectAll("text")
+            .data(data.links).enter().append("text")
+            .attr("class", d => d.amount ? "link-label money" : "link-label")
+            .attr("dy", -5)
+            .text(d => d.amount ? d.amount : d.type);
+
+        node = g.append("g").selectAll("circle")
+            .data(data.nodes).enter().append("circle")
+            .attr("r", d => d.size)
+            .attr("fill", d => colorScale[d.group])
+            .attr("stroke", "#fff").attr("stroke-width", 2).attr("stroke-opacity", 0.8)
+            .style("filter", "drop-shadow(0 0 4px rgba(255,255,255,0.3))")
+            .style("cursor", "crosshair") 
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        label = g.append("g").selectAll("text")
+            .data(data.nodes).enter().append("text")
+            .text(d => d.label)
+            .attr("font-size", d => d.group >= 6 ? "9px" : "11px")
+            .attr("fill", "#e2e8f0").attr("font-weight", "600")
+            .attr("class", "node-label") 
+            .attr("dx", d => d.size + 6).attr("dy", 4)
+            .style("pointer-events", "auto") 
+            .style("text-shadow", "0 2px 4px rgba(0,0,0,0.8)")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        // 9. ATTACH EVENTS
+        node.on("click", (event, d) => {
+            event.stopPropagation();
+            const scale = 2.5;
+            const transform = d3.zoomIdentity
+                .translate(width / 2, height / 2)
+                .scale(scale)
+                .translate(-d.x, -d.y);
+            
+            svg.transition().duration(750).call(zoomBehavior.transform, transform);
+            
+            highlightNode(d);
+            showTooltip(d, event.pageX, event.pageY);
+        })
+        .on("mouseover", (event, d) => {
+            highlightNode(d);
+            showTooltip(d, event.pageX, event.pageY);
+        })
+        .on("mouseout", (event, d) => {
+            resetSelection();
+        });
+
+        label.on("click", (event, d) => {
+            event.stopPropagation();
+            if (d.url) {
+                window.open(d.url, '_blank');
+            }
+        })
+        .on("mouseover", (event, d) => {
+           highlightNode(d);
+        })
+        .on("mouseout", (event, d) => {
+           resetSelection(); 
+        });
+
+        svg.on("click", (event) => {
+            if (event.target.tagName === 'svg') {
+                // Background click
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            if(term.length === 0) {
+                resetSelection();
+                return;
+            }
+
+            const found = data.nodes.find(n => 
+                n.label.toLowerCase().includes(term) || 
+                n.id.toLowerCase().includes(term)
+            );
+
+            if(found) {
+                highlightNode(found);
+                const scale = 2; 
+                const transform = d3.zoomIdentity
+                    .translate(width / 2, height / 2)
+                    .scale(scale)
+                    .translate(-found.x, -found.y);
+
+                svg.transition().duration(750).call(zoomBehavior.transform, transform);
+                showTooltip(found, width/2, height/2);
+            }
+        });
+
+        simulation.on("tick", () => {
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            linkLabel.attr("x", d => (d.source.x + d.target.x) / 2).attr("y", d => (d.source.y + d.target.y) / 2);
+            node.attr("cx", d => d.x).attr("cy", d => d.y);
+            label.attr("x", d => d.x).attr("y", d => d.y);
+            updateIndicators(d3.zoomTransform(svg.node()));
+        });
+
+        window.addEventListener('resize', () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            svg.attr("width", w).attr("height", h);
+            simulation.force("center", d3.forceCenter(w / 2, h / 2));
+            simulation.alpha(0.3).restart();
+            updateIndicators(d3.zoomTransform(svg.node()));
+        });
+
+    </script>
+</body>
+</html>
