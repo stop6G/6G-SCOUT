@@ -245,7 +245,7 @@
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                 </div>
-                <input type="text" id="search-input" class="block w-full p-2 pl-10 text-sm text-white border border-slate-600 rounded-lg bg-slate-800 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400" placeholder="Search (e.g. BeGREEN, Hexa-X, Nokia)...">
+                <input type="text" id="search-input" class="block w-full p-2 pl-10 text-sm text-white border border-slate-600 rounded-lg bg-slate-800 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400" placeholder="Search (e.g. VANTAGE, UK, Bristol)...">
             </div>
             
             <!-- Legend -->
@@ -277,9 +277,13 @@
             </p>
         </div>
     </div>
+    
+    <!-- Removed Footer Branding from absolute bottom -->
 
+    <!-- Tooltip Element -->
     <div id="tooltip" class="tooltip"></div>
 
+    <!-- Graph Container -->
     <div id="graph-container"></div>
 
     <script>
@@ -297,6 +301,7 @@
             }
         }
 
+        // Use window.onload to ensure ALL resources (including D3) are loaded
         window.addEventListener('load', function() {
             
             // 1. DATA DEFINITION
@@ -305,7 +310,7 @@
                     // --- Group 1: Core Governance & Funding ---
                     { id: "SNS JU", group: 1, label: "SNS JU", size: 30, desc: "Public-Private Partnership. Budget: €900M EU + €900M Industry = €1.8B.", url: "https://smart-networks.europa.eu/" },
                     { id: "EU Commission", group: 1, label: "EU Commission", size: 25, desc: "Provides public funding under Horizon Europe.", url: "https://research-and-innovation.ec.europa.eu/" },
-                    { id: "NextGenEU", group: 1, label: "NextGenEU", size: 28, desc: "EU Recovery Instrument. Primary source for UNICO (Spain) & RESTART (Italy).", url: "https://next-generation-eu.europa.eu/" }, 
+                    { id: "NextGenEU", group: 1, label: "NextGenerationEU", size: 28, desc: "EU Recovery Instrument. Primary source for UNICO (Spain) & RESTART (Italy).", url: "https://next-generation-eu.europa.eu/" }, 
                     { id: "6G-IA", group: 1, label: "6G-IA", size: 20, desc: "Industry Association. Represents private sector matching funds.", url: "https://6g-ia.eu/" },
                     { id: "Eurescom", group: 1, label: "Eurescom", size: 15, desc: "Provides administrative support to SNS JU.", url: "https://www.eurescom.eu/" },
                     { id: "EDF", group: 1, label: "EDF (Defence Fund)", size: 20, desc: "European Defence Fund. Funding dual-use/military projects like VANTAGE.", url: "https://defence-industry-space.ec.europa.eu/eu-defence-industry/european-defence-fund-edf_en" },
@@ -346,7 +351,7 @@
                     { id: "Altice Labs", group: 3, label: "Altice Labs (PT)", size: 18, desc: "Innovation center in Aveiro. Focus on optical networks & 6G.", url: "https://www.alticelabs.com/" },
                     { id: "KPN", group: 3, label: "KPN (NL)", size: 18, desc: "Dutch telecom operator. Member of 6G-IA.", url: "https://www.kpn.com/" },
                     { id: "Swisscom", group: 3, label: "Swisscom (CH)", size: 18, desc: "Leading Swiss operator. Partner in 6G-XR and 5G-PPP projects.", url: "https://www.swisscom.ch/en/business/enterprise/topics/innovation.html" },
-                    { id: "NXP", group: 3, label: "NXP (AT)", size: 18, desc: "Semiconductores & Security Hardware. Key Austrian industry player.", url: "https://www.nxp.com/" },
+                    { id: "NXP", group: 3, label: "NXP (AT)", size: 18, desc: "Semiconductors & Security Hardware. Key Austrian industry player.", url: "https://www.nxp.com/" },
                     { id: "WINGS ICT", group: 3, label: "WINGS ICT (GR)", size: 18, desc: "Greek SME driving 6G AI & vertical platforms. Partner in Hexa-X & SUSTAIN-6G.", url: "https://www.wings-ict-solutions.eu/" },
                     { id: "Telekom Slovenije", group: 3, label: "Telekom Slovenije", size: 16, desc: "Leading Slovenian operator. Advanced 5G SA & innovation pilot.", url: "https://www.telekom.si/" },
                     { id: "Siemens", group: 3, label: "Siemens", size: 18, desc: "Focus on Industrial 6G & Digital Twins. Partner in SUSTAIN-6G & 6G-ANNA.", url: "https://www.siemens.com/global/en.html" },
@@ -364,6 +369,8 @@
                     { id: "SNCF", group: 3, label: "SNCF (FR)", size: 16, desc: "French Railways. Vertical user for RIS in high-speed trains.", url: "https://www.sncf.com/" },
                     { id: "Stellantis", group: 3, label: "Stellantis (IT/FR)", size: 16, desc: "Automotive giant. Vertical user for RIS in vehicles.", url: "https://www.stellantis.com/" },
                     { id: "Keysight", group: 3, label: "Keysight (BE/US)", size: 18, desc: "Measurement Giant. Project Coordinator of 6G-SANDBOX.", url: "https://www.keysight.com/" },
+                    
+                    // --- 6G-BRICKS PARTNERS ---
                     { id: "Iquadrat", group: 3, label: "Iquadrat (ES)", size: 16, desc: "SME focused on network simulation. Partner in 6G-BRICKS.", url: "https://www.iquadrat.com/" },
                     { id: "Brainstorm", group: 3, label: "Brainstorm (ES)", size: 16, desc: "Real-time 3D graphics & virtual studios. 6G-BRICKS partner.", url: "https://www.brainstorm3d.com/" },
                     { id: "NI", group: 3, label: "NI Dresden (DE)", size: 16, desc: "National Instruments. RF Testbeds. 6G-BRICKS partner.", url: "https://www.ni.com/" },
@@ -372,10 +379,12 @@
                     { id: "eBOS", group: 3, label: "eBOS (CY)", size: 16, desc: "R&D SME, quality assurance. 6G-BRICKS partner.", url: "https://www.ebos.com.cy/" },
                     { id: "Lenovo", group: 3, label: "Lenovo", size: 16, desc: "Global technology leader. 6G-BRICKS partner.", url: "https://www.lenovo.com/" },
                     { id: "Satways", group: 3, label: "Satways (GR)", size: 16, desc: "Geospatial solutions SME. 6G-BRICKS partner.", url: "http://www.satways.net/" },
+                    
+                    // --- 6G-INTENSE PARTNERS ---
                     { id: "Nextworks", group: 3, label: "Nextworks (IT)", size: 16, desc: "SME specialized in SDN/NFV orchestration. Partner in 6G-INTENSE.", url: "https://www.nextworks.it/" },
                     { id: "Nearby", group: 3, label: "Nearby Computing (ES)", size: 16, desc: "Edge Computing orchestration. Partner in 6G-INTENSE.", url: "https://www.nearbycomputing.com/" },
 
-                    // --- Group 4: Projects (KEY CALL 2) ---
+                    // --- Group 4: Projects ---
                     { id: "Hexa-X-II", group: 4, label: "Hexa-X-II", size: 22, desc: "The European 6G System Blueprint.", url: "https://hexa-x-ii.eu/" },
                     { id: "RISE-6G", group: 4, label: "RISE-6G", size: 16, desc: "Reconfigurable Intelligent Surfaces (RIS).", url: "https://rise-6g.eu/" },
                     { id: "6G-ANNA", group: 4, label: "6G-ANNA", size: 22, desc: "German Industrial Lighthouse Project. Led by Nokia.", url: "https://www.6g-anna.de/" },
@@ -389,42 +398,58 @@
                     { id: "6G-VERSUS", group: 4, label: "6G-VERSUS", size: 16, desc: "Sustainability & Vertical Pilots (Bulgaria, Greece). Led by Univ. Oulu.", url: "https://6g-versus.eu/" },
                     { id: "6G-SANDBOX", group: 6, label: "6G-SANDBOX", size: 20, desc: "Pan-European Testbed. Coordinated by Keysight.", url: "https://6g-sandbox.eu/" },
                     { id: "6G-PATH", group: 7, label: "6G-PATH", size: 20, desc: "Pilots & Trials in Health, Education, Farming & Cities.", url: "https://6gpath.eu/" },
-                    { id: "6G-BRICKS", group: 7, label: "6G-BRICKS", size: 18, desc: "Reusable Testbed Infrastructures (Call 2). Coordinated by ISI/Athena.", url: "https://6g-bricks.eu/" },
-                    { id: "6G-INTENSE", group: 7, label: "6G-INTENSE", size: 18, desc: "Native AI for Intent-based Networking (Call 2). Coordinated by CTTC.", url: "https://6g-intense.eu/" },
+                    
+                    // --- CALL 2 PROJECTS ---
                     { id: "6G-TWIN", group: 7, label: "6G-TWIN", size: 18, desc: "Digital Twin for 6G networks. Coordinated by LIST.", url: "https://6g-twin.eu/" },
                     { id: "ROBUST-6G", group: 7, label: "ROBUST-6G", size: 18, desc: "Security & Resilience. Coordinated by Ericsson.", url: "https://robust-6g.eu/" },
                     { id: "ETHER", group: 7, label: "ETHER", size: 18, desc: "Integrated Terrestrial/Non-Terrestrial Networks. 3D Architecture.", url: "https://ether-project.eu/" },
                     { id: "6G-SHINE", group: 7, label: "6G-SHINE", size: 18, desc: "Short Range Extreme Communication (In-X). Coordinated by Aalborg Univ.", url: "https://6gshine.eu/" },
+                    { id: "6G-MIRAI", group: 7, label: "6G-MIRAI", size: 18, desc: "AI-native wireless systems.", url: "https://6g-mirai.eu/" },
+                    { id: "6G-NTN", group: 7, label: "6G-NTN", size: 18, desc: "Non-Terrestrial Networks.", url: "https://6g-ntn.eu/" },
+                    { id: "6G-SENSES", group: 7, label: "6G-SENSES", size: 18, desc: "Integrated Sensing & Comms.", url: "https://6g-senses.eu/" },
+                    { id: "6G-DISCO", group: 7, label: "6G-DISCO", size: 18, desc: "Distributed Intelligence.", url: "https://6g-disco.eu/" },
+                    { id: "6G-GOALS", group: 7, label: "6G-GOALS", size: 18, desc: "Goal-oriented AI.", url: "https://6g-goals.eu/" },
+                    { id: "6G-INTENSE", group: 7, label: "6G-INTENSE", size: 18, desc: "Native AI Intent.", url: "https://6g-intense.eu/" },
+                    { id: "ADROIT6G", group: 7, label: "ADROIT6G", size: 18, desc: "Distributed AI.", url: "https://adroit6g.eu/" },
+                    { id: "ASSET-6G", group: 7, label: "ASSET-6G", size: 18, desc: "Secure Sustainable Edge.", url: "https://asset-6g.eu/" },
+                    { id: "BELIEVE-6G", group: 7, label: "BELIEVE-6G", size: 18, desc: "Optical/Radio.", url: "https://believe-6g.eu/" },
+                    { id: "CENTRIC", group: 7, label: "CENTRIC", size: 18, desc: "User-centric AI.", url: "https://centric-6g.eu/" },
+                    { id: "COMBO-6G", group: 7, label: "COMBO-6G", size: 18, desc: "Comms & Compute.", url: "https://combo-6g.eu/" },
+                    { id: "DETERMINISTIC6G", group: 7, label: "DETERMINISTIC6G", size: 18, desc: "Industrial Deterministic.", url: "https://deterministic6g.eu/" },
+                    { id: "EXIGENCE", group: 7, label: "EXIGENCE", size: 18, desc: "Energy Efficiency.", url: "https://exigence-6g.eu/" },
+                    { id: "FLEX-SCALE", group: 7, label: "FLEX-SCALE", size: 18, desc: "Optical Transport.", url: "https://flex-scale-6g.eu/" },
+                    { id: "HORSE", group: 7, label: "HORSE", size: 18, desc: "Security/Resilience.", url: "https://horse-6g.eu/" },
+                    { id: "INSTINCT", group: 7, label: "INSTINCT", size: 18, desc: "Sensing & Comms.", url: "https://instinct-6g.eu/" },
+                    { id: "ORIGAMI", group: 7, label: "ORIGAMI", size: 18, desc: "Global Architecture.", url: "https://origami-6g.eu/" },
+                    { id: "PREDICT-6G", group: 7, label: "PREDICT-6G", size: 18, desc: "Predictive Networks.", url: "https://predict-6g.eu/" },
+                    { id: "TERRAMETA", group: 7, label: "TERRAMETA", size: 18, desc: "THz Metasurfaces.", url: "https://terrameta-6g.eu/" },
+                    { id: "TIMES", group: 7, label: "TIMES", size: 18, desc: "THz Mesh.", url: "https://times-6g.eu/" },
+                    { id: "6G-BRICKS", group: 7, label: "6G-BRICKS", size: 18, desc: "Experimentation.", url: "https://6g-bricks.eu/" },
+                    { id: "VERGE", group: 7, label: "VERGE", size: 18, desc: "Edge AI Green.", url: "https://smart-networks.europa.eu/project/verge/" },
                     
-                    // --- NEW CALL 2 PROJECTS (REMAINING 20) ---
-                    { id: "6G-MIRAI", group: 7, label: "6G-MIRAI", size: 15, desc: "AI-native wireless systems. Call 2.", url: "https://smart-networks.europa.eu/project/6g-mirai/" },
-                    { id: "6G-NTN", group: 7, label: "6G-NTN", size: 15, desc: "Non-Terrestrial Networks. Call 2.", url: "https://smart-networks.europa.eu/project/6g-ntn/" },
-                    { id: "6G-SENSES", group: 7, label: "6G-SENSES", size: 15, desc: "Integrated Sensing & Comms. Call 2.", url: "https://smart-networks.europa.eu/project/6g-senses/" },
-                    { id: "6G-DISCO", group: 7, label: "6G-DISCO", size: 15, desc: "Distributed Intelligence. Call 2.", url: "https://smart-networks.europa.eu/project/6g-disco/" },
-                    { id: "6G-GOALS", group: 7, label: "6G-GOALS", size: 15, desc: "Goal-oriented AI. Call 2.", url: "https://smart-networks.europa.eu/project/6g-goals/" },
-                    { id: "ADROIT6G", group: 7, label: "ADROIT6G", size: 15, desc: "Distributed AI. Call 2.", url: "https://smart-networks.europa.eu/project/adroit6g/" },
-                    { id: "ASSET-6G", group: 7, label: "ASSET-6G", size: 15, desc: "Secure Sustainable Edge. Call 2.", url: "https://smart-networks.europa.eu/project/asset-6g/" },
-                    { id: "BELIEVE-6G", group: 7, label: "BELIEVE-6G", size: 15, desc: "Optical/Radio. Call 2.", url: "https://smart-networks.europa.eu/project/believe-6g/" },
-                    { id: "CENTRIC", group: 7, label: "CENTRIC", size: 15, desc: "User-centric AI. Call 2.", url: "https://smart-networks.europa.eu/project/centric/" },
-                    { id: "COMBO-6G", group: 7, label: "COMBO-6G", size: 15, desc: "Comms & Compute. Call 2.", url: "https://smart-networks.europa.eu/project/combo-6g/" },
-                    { id: "DETERMINISTIC6G", group: 7, label: "DETERMINISTIC6G", size: 15, desc: "Industrial Deterministic. Call 2.", url: "https://smart-networks.europa.eu/project/deterministic6g/" },
-                    { id: "EXIGENCE", group: 7, label: "EXIGENCE", size: 15, desc: "Energy Efficiency. Call 2.", url: "https://smart-networks.europa.eu/project/exigence/" },
-                    { id: "FLEX-SCALE", group: 7, label: "FLEX-SCALE", size: 15, desc: "Optical Transport. Call 2.", url: "https://smart-networks.europa.eu/project/flex-scale/" },
-                    { id: "HORSE", group: 7, label: "HORSE", size: 15, desc: "Security/Resilience. Call 2.", url: "https://smart-networks.europa.eu/project/horse/" },
-                    { id: "INSTINCT", group: 7, label: "INSTINCT", size: 15, desc: "Sensing & Comms. Call 2.", url: "https://smart-networks.europa.eu/project/instinct/" },
-                    { id: "ORIGAMI", group: 7, label: "ORIGAMI", size: 15, desc: "Global Architecture. Call 2.", url: "https://smart-networks.europa.eu/project/origami/" },
-                    { id: "PREDICT-6G", group: 7, label: "PREDICT-6G", size: 15, desc: "Predictive Networks. Call 2.", url: "https://smart-networks.europa.eu/project/predict-6g/" },
-                    { id: "TERRAMETA", group: 7, label: "TERRAMETA", size: 15, desc: "THz Metasurfaces. Call 2.", url: "https://smart-networks.europa.eu/project/terrameta/" },
-                    { id: "TIMES", group: 7, label: "TIMES", size: 15, desc: "THz Mesh. Call 2.", url: "https://smart-networks.europa.eu/project/times/" },
-                    { id: "VERGE", group: 7, label: "VERGE", size: 15, desc: "Edge AI Green. Call 2.", url: "https://smart-networks.europa.eu/project/verge/" },
-                    
-                    // --- NEW CALL 1 PROJECTS ---
+                    // --- CALL 1 PROJECTS ---
                     { id: "BeGREEN", group: 6, label: "BeGREEN", size: 15, desc: "Energy Efficiency. Call 1.", url: "https://begreen-project.eu/" },
                     { id: "5G-EPICENTRE", group: 6, label: "5G-EPICENTRE", size: 15, desc: "Public Protection & Disaster Relief. Call 1.", url: "https://5gepicentre.eu/" },
                     { id: "FIDAL", group: 6, label: "FIDAL", size: 15, desc: "Large Scale Field Trials. Call 1.", url: "https://fidal-he.eu/" },
                     { id: "IMAGINE-B5G", group: 6, label: "IMAGINE-B5G", size: 15, desc: "Advanced 5G/6G Infrastructure. Call 1.", url: "https://imagine-b5g.eu/" },
                     { id: "SEASON", group: 6, label: "SEASON", size: 15, desc: "Sustainable Transport Infrastructure. Call 1.", url: "https://season-project.eu/" },
-                    { id: "VERGE-C1", group: 6, label: "VERGE (C1)", size: 15, desc: "Edge Computing Evolution. Call 1.", url: "https://verge-project.eu/" }, // Distinct from Call 2 VERGE if exists, or merge. Assuming distinct or earlier phase.
+                    { id: "VERGE-C1", group: 6, label: "VERGE (C1)", size: 15, desc: "Edge Computing Evolution. Call 1.", url: "https://verge-project.eu/" },
+
+                    // --- NEW CALL 3 PROJECTS (ADDED) ---
+                    { id: "6G-EWOC", group: 7, label: "6G-EWOC", size: 16, desc: "AI-enhanced Optical Wireless. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "6G-REFERENCE", group: 7, label: "6G-REFERENCE", size: 16, desc: "Open 6G Architecture. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "PROTEUS-6G", group: 7, label: "PROTEUS-6G", size: 16, desc: "Programmable Reconfigurability. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "6G-SIRCUL", group: 7, label: "6G-SIRCUL", size: 16, desc: "Ultra-reliable comms. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "SAFE-6G", group: 7, label: "SAFE-6G", size: 16, desc: "User-centric Security. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "NATWORK", group: 7, label: "NATWORK", size: 16, desc: "Net-Zero AI Networks. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "iSEE-6G", group: 7, label: "iSEE-6G", size: 16, desc: "Information, Sensing, Energy. Call 3.", url: "https://smart-networks.europa.eu/" },
+                    { id: "6G-DALI", group: 7, label: "6G-DALI", size: 18, desc: "Data & AI for 6G. Call 3.", url: "https://smart-networks.europa.eu/project/6g-dali/" },
+                    { id: "6G-XCEL", group: 7, label: "6G-XCEL", size: 18, desc: "AI for decentralized network control. Call 3.", url: "https://smart-networks.europa.eu/project/6g-xcel/" },
+                    { id: "TERAGREEN", group: 7, label: "TERAGREEN", size: 18, desc: "Energy-efficient THz comms. Call 3.", url: "https://smart-networks.europa.eu/project/teragreen/" },
+                    { id: "6G-FLEEX", group: 7, label: "6G-FLEEX", size: 18, desc: "Flexible & Efficient networks. Call 3.", url: "https://smart-networks.europa.eu/project/6g-fleex/" },
+                    { id: "AMBIENT-6G", group: 7, label: "AMBIENT-6G", size: 18, desc: "Ambient energy harvesting comms. Call 3.", url: "https://smart-networks.europa.eu/project/ambient-6g/" },
+                    { id: "6G-DISAC", group: 7, label: "6G-DISAC", size: 18, desc: "Distributed Intelligent Sensing & Comms. Call 3.", url: "https://smart-networks.europa.eu/project/6g-disac/" },
+
 
                     // Group 5: Research
                     { id: "6G Flagship", group: 5, label: "6G Flagship", size: 18, desc: "Univ. of Oulu. €251M budget (2018-2026). Pioneer of 6G vision.", url: "https://www.6gflagship.com/" },
@@ -470,8 +495,7 @@
                     { id: "Eurecom", group: 5, label: "Eurecom (FR)", size: 16, desc: "Leading telecom research center. Partner in 6G-BRICKS.", url: "https://www.eurecom.fr/en" },
                     { id: "CTTC", group: 5, label: "CTTC (ES)", size: 18, desc: "Centre Tecnològic de Telecomunicacions de Catalunya. Coordinator of 6G-INTENSE.", url: "https://www.cttc.es/" },
                     { id: "UGR", group: 5, label: "U. Granada (ES)", size: 16, desc: "AI research leadership. Partner in 6G-INTENSE.", url: "https://www.ugr.es/" },
-                    { id: "Nextworks", group: 3, label: "Nextworks (IT)", size: 16, desc: "SME specialized in SDN/NFV orchestration. Partner in 6G-INTENSE.", url: "https://www.nextworks.it/" },
-                    { id: "Nearby", group: 3, label: "Nearby Computing (ES)", size: 16, desc: "Edge Computing orchestration. Partner in 6G-INTENSE.", url: "https://www.nearbycomputing.com/" },
+                    { id: "UC3M", group: 5, label: "UC3M (ES)", size: 16, desc: "Univ. Carlos III Madrid. Coordinator of 6G-XCEL.", url: "https://www.uc3m.es/" },
 
                     // Group 6-8: Calls
                     { id: "Call 1", group: 6, label: "Call 1 (2022)", size: 20, desc: "Focus: 5G Evolution. Approx ~€380M budget.", url: "https://smart-networks.europa.eu/project-portfolio/" },
@@ -677,7 +701,7 @@
                     { source: "UGR", target: "6G-INTENSE", type: "Partner" },
                     { source: "Nearby", target: "6G-INTENSE", type: "Partner" },
                     
-                    // --- CALL 1 LINKS ---
+                    // CALL 1 LINKS
                     { source: "Call 1", target: "BeGREEN", type: "Funds" },
                     { source: "Call 1", target: "5G-EPICENTRE", type: "Funds" },
                     { source: "Call 1", target: "FIDAL", type: "Funds" },
@@ -705,7 +729,26 @@
                     { source: "Call 2", target: "PREDICT-6G", type: "Funds" },
                     { source: "Call 2", target: "TERRAMETA", type: "Funds" },
                     { source: "Call 2", target: "TIMES", type: "Funds" },
-                    { source: "Call 2", target: "VERGE", type: "Funds" }
+                    { source: "Call 2", target: "VERGE", type: "Funds" },
+                    
+                    // CALL 3 LINKS
+                    { source: "Call 3", target: "6G-EWOC", type: "Funds" },
+                    { source: "Call 3", target: "6G-REFERENCE", type: "Funds" },
+                    { source: "Call 3", target: "PROTEUS-6G", type: "Funds" },
+                    { source: "Call 3", target: "6G-SIRCUL", type: "Funds" },
+                    { source: "Call 3", target: "SAFE-6G", type: "Funds" },
+                    { source: "Call 3", target: "NATWORK", type: "Funds" },
+                    { source: "Call 3", target: "iSEE-6G", type: "Funds" },
+                    { source: "Call 3", target: "SUSTAIN-6G", type: "Flagship" },
+                    { source: "Call 3", target: "6G-DALI", type: "Funds" },
+                    { source: "Call 3", target: "6G-XCEL", type: "Funds" },
+                    { source: "Call 3", target: "TERAGREEN", type: "Funds" },
+                    { source: "Call 3", target: "6G-FLEEX", type: "Funds" },
+                    { source: "Call 3", target: "AMBIENT-6G", type: "Funds" },
+                    { source: "Call 3", target: "6G-DISAC", type: "Funds" },
+                    
+                    { source: "CTTC", target: "6G-DALI", type: "Coord." },
+                    { source: "UC3M", target: "6G-XCEL", type: "Coord." }
                 ]
             };
 
@@ -911,7 +954,7 @@
             const simulation = d3.forceSimulation(data.nodes)
                 .velocityDecay(0.3) 
                 .force("link", d3.forceLink(data.links).id(d => d.id).distance(d => {
-                    if (d.source.group >= 6 || d.target.group >= 6) return 140; 
+                    if (d.source.group >= 6 || d.target.group >= 6 || d.source.group >= 7 || d.target.group >= 7) return 140; 
                     return 200; 
                 }))
                 .force("charge", d3.forceManyBody().strength(-500)) 
