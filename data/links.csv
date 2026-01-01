@@ -1,270 +1,224 @@
 source,target,amount,type
-"EU Commission","SNS JU","€900M","Public Funding"
-"6G-IA","SNS JU","€900M","Private Match"
-"SNS JU","Eurescom",,"Admin Support"
-"NextGenEU","Spanish Gov","Recovery Funds","Funding Source"
-"NextGenEU","RESTART","PNRR Funds","Funding Source"
-"SNS JU","Call 1","~€380M","Allocation"
-"SNS JU","Call 2","~€130M","Allocation"
-"SNS JU","Call 3","TBD","Allocation"
-"BMBF","6G-ANNA","€38.4M","Grant (70%)"
-"BMBF","Fraunhofer","~€70M (Hubs)","Hub Funding"
-"France 2030","PEPR Networks","€65M","Funding Program"
-"PEPR Networks","CEA-Leti",,"Co-Director"
-"PEPR Networks","CNRS",,"Co-Director"
-"PEPR Networks","IMT",,"Co-Director"
-"IMT","France 6G",,"Launches"
-"Orange","France 6G",,"Member"
-"Thales","France 6G",,"Member"
-"France 2030","Orange",,"Key Industry"
-"Business Finland","6G Flagship","€251M","Total Prg"
-"Spanish Gov","IMDEA Networks","UNICO I+D","Grant"
-"Spanish Gov","Telefónica","UNICO","Grant/Aid"
-"Spanish Gov","i2CAT","UNICO","Grant"
-"UK Gov","Univ Bristol","£100M","Strategy"
-"RESTART","CNIT","Partner","Research"
-"RESTART","TIM","Partner","Industry"
-"FNS","TNO","Lead","Coordination"
-"FNS","TU Delft","Partner","Research"
-"TNO","Hexa-X-II",,"Partner"
-"TNO","6G-IA",,"Member"
-"KPN","6G-IA",,"Member"
-"KPN","FNS",,"Industry Partner"
-"TU Delft","6G-IA",,"Member"
-"NCBR","SNS JU",,"Partner Agency"
-"Polish Presidency","EU Commission",,"Policy (DNA)"
-"NCBR","IS-Wireless","Grant","R&D Funding"
-"Orange PL","NCBR",,"Collaboration"
-"Orange PL","Orange",,"Subsidiary"
-"NCBR","EuCNC 2025",,"Host Country"
-"SNS JU","EuCNC 2025",,"Organizer"
-"LMT","6G-IA",,"Member"
-"LMT","VANTAGE",,"Coordinator"
-"EDF","VANTAGE","€10M","Defence Funding"
-"TalTech","XTRUST-6G",,"Partner"
-"SNS JU","XTRUST-6G",,"Funding"
-"Photonics LT","6G-IA",,"Tech Input"
-"BELSPO","IMEC",,"Funding"
-"IMEC","SNS JU",,"Strategic Partner"
-"IMEC","KU Leuven",,"Partner"
-"IMEC","Hexa-X-II",,"Contributor"
-"FCT","IT Portugal",,"Funding"
-"Altice Labs","IT Portugal",,"Innovation Partner"
-"Altice Labs","SNS JU",,"Partner"
-"IT Portugal","SNS JU",,"Project Partner"
-"U. Aveiro","IT Portugal",,"Affiliation"
-"WINGS ICT","6G-IA",,"Member"
-"WINGS ICT","Hexa-X-II",,"Partner"
-"WINGS ICT","SUSTAIN-6G",,"Partner"
-"ISI/Athena","SUNRISE-6G",,"Coordinator"
-"SNS JU","SUNRISE-6G",,"Funding"
-"SNS JU","6G-VERSUS",,"Funding"
-"Telekom Slovenije","IJS",,"Collaboration"
-"Call 3","SUSTAIN-6G",,"Funds"
-"Nokia","SUSTAIN-6G",,"Coordinator"
-"Orange","SUSTAIN-6G",,"Tech Manager"
-"Eurescom","SUSTAIN-6G",,"Innov Manager"
-"Deutsche Telekom","SUSTAIN-6G",,"Partner"
-"Telefónica","SUSTAIN-6G",,"Partner"
-"TIM","SUSTAIN-6G",,"Partner"
-"6G Flagship","SUSTAIN-6G",,"Partner"
-"IMEC","SUSTAIN-6G",,"Partner"
-"CEA-Leti","SUSTAIN-6G",,"Partner"
-"PoliTo","SUSTAIN-6G",,"Partner"
-"Siemens","SUSTAIN-6G",,"Partner"
-"John Deere","SUSTAIN-6G",,"Partner"
-"Call 2","6G-PATH",,"Funds"
-"Altice Labs","6G-PATH",,"Partner"
-"IT Portugal","6G-PATH",,"Partner"
-"OTE","6G-PATH",,"Partner"
-"Orange RO","6G-PATH",,"Partner"
-"Telefónica","6G-PATH",,"R&D Partner"
-"Airbus","6G-PATH",,"Partner"
-"U. Malaga","6G-PATH",,"Partner"
-"Karlstad U","6G-PATH",,"Partner"
-"Fraunhofer","6G-PATH",,"Partner"
-"Vodafone","6G-ANNA",,"Partner"
-"Bosch","6G-ANNA",,"Partner"
-"Rohde & Schwarz","6G-ANNA",,"Partner"
-"TU Dresden","6G-ANNA",,"Partner"
-"TU Munich","6G-ANNA",,"Partner"
-"RWTH Aachen","6G-ANNA",,"Partner"
-"KIT","6G-ANNA",,"Partner"
-"Airbus","6G-ANNA",,"Partner"
-"Siemens","6G-ANNA",,"Partner"
-"Ericsson","6G-ANNA",,"Partner"
-"Fraunhofer","6G-ANNA",,"Partner"
-"SAL","6G-IA",,"Member"
-"AIT Austria","6G-IA",,"Member"
-"NXP","SAL",,"Industry Partner"
-"TU Wien","SAL",,"Research Partner"
-"AIT Austria","XTRUST-6G",,"Partner"
-"SERI","6G-XR","Funding (CH)","National Grant"
-"Swisscom","6G-XR",,"Partner"
-"ETH Zurich","6G-XR",,"Partner"
-"EPFL","6G-IA",,"Member"
-"UK Gov","EU Commission","Assoc.","Horizon Europe Assoc."
-"Univ Bristol","6G-IA",,"Member"
-"CERTH","XTRUST-6G",,"Coordinator"
-"Telefónica","XTRUST-6G",,"Partner"
-"TalTech","XTRUST-6G",,"Partner"
-"Telekom Slovenije","XTRUST-6G",,"Partner"
-"Univ Portsmouth","XTRUST-6G",,"Partner"
-"Ericsson","XTRUST-6G",,"Partner"
-"Call 1","Hexa-X-II",,"Flagship Funding"
-"Call 1","6G-SANDBOX",,"Funds"
-"Nokia","Hexa-X-II",,"Project Lead"
-"Ericsson","Hexa-X-II",,"Tech Manager"
-"Nokia","6G-ANNA",,"Lead"
-"Nokia","6G-IA",,"Chairs"
-"Deutsche Telekom","6G-IA",,"Member"
-"Telefónica","6G-IA",,"Member"
-"Telefónica","ENABLE-6G",,"Partner"
-"IMDEA Networks","ENABLE-6G",,"Coordination"
-"Spanish Gov","ENABLE-6G","UNICO","Funding"
-"i2CAT","6G-IA",,"Member"
-"Orange","6G-IA",,"Member"
-"Thales","6G-IA",,"Member"
-"Airbus","Thales",,"Space/NTN Collab"
-"CEA-Leti","RISE-6G",,"Coordination"
-"6G Flagship","SUNRISE-6G",,"Infrastructure Provider"
-"CEA-Leti","SUNRISE-6G",,"Infrastructure Provider"
-"LMT","SUNRISE-6G",,"Infrastructure Provider"
-"U. Malaga","SUNRISE-6G",,"Infrastructure Provider"
-"Atos","SUNRISE-6G",,"Integration Partner"
-"Atos","6G-IA",,"Member"
-"NCBR","SUNRISE-6G",,"Partner Agency"
-"VTT","6G-XR",,"Partner"
-"Matsuko","6G-XR",,"Partner"
-"Capgemini","6G-XR",,"Partner"
-"Vicomtech","6G-XR",,"Partner"
-"Telefónica","6G-XR",,"Partner"
-"Ericsson","6G-XR",,"Partner"
-"i2CAT","6G-XR",,"Partner"
-"Call 2","6G-XR",,"Funds"
-"NEC Labs","RISE-6G",,"Partner"
-"Greenerwave","RISE-6G",,"Tech Provider"
-"SNCF","RISE-6G",,"Vertical (Rail)"
-"Stellantis","RISE-6G",,"Vertical (Auto)"
-"Chalmers","RISE-6G",,"Partner"
-"Aalborg Univ","RISE-6G",,"Partner"
-"NKUA","RISE-6G",,"Partner"
-"Orange","RISE-6G",,"Partner"
-"TIM","RISE-6G",,"Partner"
-"CNRS","RISE-6G",,"Partner"
-"Keysight","6G-SANDBOX",,"Coordinator"
-"Fraunhofer FOKUS","6G-SANDBOX",,"Partner (Berlin)"
-"OTE","6G-SANDBOX",,"Partner (Athens)"
-"U. Malaga","6G-SANDBOX",,"Partner (Malaga)"
-"Nokia","6G-SANDBOX",,"Partner"
-"Telefónica","6G-SANDBOX",,"Partner"
-"6G Flagship","6G-VERSUS",,"Coordinator"
-"ICCS","6G-VERSUS",,"Tech Manager"
-"Call 2","6G-TWIN",,"Funds"
-"Call 2","ROBUST-6G",,"Funds"
-"Call 2","ETHER",,"Funds"
-"Call 2","6G-SHINE",,"Funds"
-"LIST","6G-TWIN",,"Coordinator"
-"IMEC","6G-TWIN",,"Partner"
-"Ericsson","ROBUST-6G",,"Coordinator"
-"Telefónica","ROBUST-6G",,"Partner"
-"Thales","ETHER",,"Partner"
-"Aalborg Univ","6G-SHINE",,"Coordinator"
-"Nokia","6G-SHINE",,"Partner"
-"Bosch","6G-SHINE",,"Partner"
-"CNIT","6G-SHINE",,"Partner"
-"IMEC","6G-SHINE",,"Partner"
-"Call 2","6G-BRICKS",,"Funds"
-"ISI/Athena","6G-BRICKS",,"Coordinator"
-"Iquadrat","6G-BRICKS",,"Partner"
-"KU Leuven","6G-BRICKS",,"Partner"
-"CEA-Leti","6G-BRICKS",,"Partner"
-"Eurecom","6G-BRICKS",,"Partner"
-"NI","6G-BRICKS",,"Partner"
-"Intracom","6G-BRICKS",,"Partner"
-"i2CAT","6G-BRICKS",,"Partner"
-"Brainstorm","6G-BRICKS",,"Partner"
-"Space Hellas","6G-BRICKS",,"Partner"
-"OTE","6G-BRICKS",,"Partner"
-"eBOS","6G-BRICKS",,"Partner"
-"Lenovo","6G-BRICKS",,"Partner"
-"Satways","6G-BRICKS",,"Partner"
-"Call 2","6G-INTENSE",,"Funds"
-"CTTC","6G-INTENSE",,"Coordinator"
-"Nokia","6G-INTENSE",,"Partner"
-"Orange","6G-INTENSE",,"Partner"
-"Nextworks","6G-INTENSE",,"Partner"
-"UGR","6G-INTENSE",,"Partner"
-"Nearby","6G-INTENSE",,"Partner"
-"Call 1","BeGREEN",,"Funds"
-"Call 1","5G-EPICENTRE",,"Funds"
-"Call 1","FIDAL",,"Funds"
-"Call 1","IMAGINE-B5G",,"Funds"
-"Call 1","SEASON",,"Funds"
-"Call 1","VERGE-C1",,"Funds"
-"Call 2","6G-MIRAI",,"Funds"
-"Call 2","6G-NTN",,"Funds"
-"Call 2","6G-SENSES",,"Funds"
-"Call 2","6G-DISCO",,"Funds"
-"Call 2","6G-GOALS",,"Funds"
-"Call 2","ADROIT6G",,"Funds"
-"Call 2","ASSET-6G",,"Funds"
-"Call 2","BELIEVE-6G",,"Funds"
-"Call 2","CENTRIC",,"Funds"
-"Call 2","COMBO-6G",,"Funds"
-"Call 2","DETERMINISTIC6G",,"Funds"
-"Call 2","EXIGENCE",,"Funds"
-"Call 2","FLEX-SCALE",,"Funds"
-"Call 2","HORSE",,"Funds"
-"Call 2","INSTINCT",,"Funds"
-"Call 2","ORIGAMI",,"Funds"
-"Call 2","PREDICT-6G",,"Funds"
-"Call 2","TERRAMETA",,"Funds"
-"Call 2","TIMES",,"Funds"
-"Call 2","VERGE",,"Funds"
-"Call 1","ACROSS",,"Funds"
-"Call 1","BLUEPRINT",,"Funds"
-"Call 1","CONFIDENTIAL6G",,"Funds"
-"Call 1","DESIRE6G",,"Funds"
-"Call 1","GANDALF",,"Funds"
-"Call 1","PRIVATEER",,"Funds"
-"Call 1","SUPERIOT",,"Funds"
-"Call 1","TERRAMETA",,"Funds"
-"Call 1","TIMES",,"Funds"
-"Nokia","GANDALF",,"Coordinator"
-"6G Flagship","SUPERIOT",,"Coordinator"
-"CNIT","TERRAMETA",,"Coordinator"
-"CEA-Leti","TIMES",,"Partner"
-"Ericsson","ACROSS",,"Partner"
-"Call 1","RIGOUROUS",,"Funds"
-"Univ Amsterdam","DESIRE6G",,"Coordinator"
-"VTT","CONFIDENTIAL6G",,"Coordinator"
-"Space Hellas","PRIVATEER",,"Coordinator"
-"Univ Murcia","RIGOUROUS",,"Coordinator"
-"Call 1","TARGET-X",,"Funds"
-"Call 1","TrialsNet",,"Funds"
-"Call 1","5G-STARDUST",,"Funds"
-"Call 1","NANCY",,"Funds"
-"Call 1","6G-NTN",,"Funds"
-"Fraunhofer","TARGET-X",,"Coordinator"
-"Ericsson","TrialsNet",,"Coordinator"
-"DLR","5G-STARDUST",,"Coordinator"
-"Thales","6G-NTN",,"Partner"
-"U. Aveiro","NANCY",,"Partner"
-"TARGET-X","IDIADA",,"Partner"
-"TARGET-X","Siemens",,"Partner"
-"TARGET-X","Marburg",,"Partner"
-"TARGET-X","5GAA",,"Strategic Partner"
-"5G-STARDUST","Hispasat",,"Partner"
-"5G-STARDUST","Thales",,"Partner"
-"5G-STARDUST","Orange",,"Partner"
-"TrialsNet","Torino",,"Host City"
-"TrialsNet","Ericsson",,"Coordinator"
-"TrialsNet","Orange",,"Partner"
-"TrialsNet","TIM",,"Partner"
-"TrialsNet","CNIT",,"Partner"
-"TrialsNet","UPM",,"Partner"
-"NANCY","UPM",,"Partner"
-"NANCY","Telefónica",,"Partner"
-"Call 1","BLUEPRINT",,"Funds"
-"Aalto Univ","BLUEPRINT",,"Coordinator"
+EU Commission,SNS JU,€900M,Public Funding
+6G-IA,SNS JU,€900M,Private Match
+SNS JU,Eurescom,,Admin Support
+NextGenEU,Spanish Gov,Recovery Funds,Funding Source
+NextGenEU,RESTART,PNRR Funds,Funding Source
+SNS JU,Call 1,~€380M,Allocation
+SNS JU,Call 2,~€130M,Allocation
+SNS JU,Call 3,TBD,Allocation
+BMBF,6G-ANNA,€38.4M,Grant (70%)
+BMBF,Fraunhofer,~€70M (Hubs),Hub Funding
+France 2030,PEPR Networks,€65M,Funding Program
+PEPR Networks,CEA-Leti,,Co-Director
+PEPR Networks,CNRS,,Co-Director
+PEPR Networks,IMT,,Co-Director
+IMT,France 6G,,Launches
+Orange,France 6G,,Member
+Thales,France 6G,,Member
+France 2030,Orange,,Key Industry
+Business Finland,6G Flagship,€251M,Total Prg
+Spanish Gov,IMDEA Networks,UNICO I+D,Grant
+Spanish Gov,Telefónica,UNICO,Grant/Aid
+Spanish Gov,i2CAT,UNICO,Grant
+UK Gov,Univ Bristol,£100M,Strategy
+RESTART,CNIT,Partner,Research
+RESTART,TIM,Partner,Industry
+FNS,TNO,Lead,Coordination
+FNS,TU Delft,Partner,Research
+TNO,Hexa-X-II,,Partner
+TNO,6G-IA,,Member
+KPN,6G-IA,,Member
+KPN,FNS,,Industry Partner
+TU Delft,6G-IA,,Member
+NCBR,SNS JU,,Partner Agency
+Polish Presidency,EU Commission,,Policy (DNA)
+NCBR,IS-Wireless,Grant,R&D Funding
+Orange PL,NCBR,,Collaboration
+Orange PL,Orange,,Subsidiary
+NCBR,EuCNC 2025,,Host Country
+SNS JU,EuCNC 2025,,Organizer
+LMT,6G-IA,,Member
+LMT,VANTAGE,,Coordinator
+EDF,VANTAGE,€10M,Defence Funding
+TalTech,XTRUST-6G,,Partner
+SNS JU,XTRUST-6G,,Funding
+Photonics LT,6G-IA,,Tech Input
+BELSPO,IMEC,,Funding
+IMEC,SNS JU,,Strategic Partner
+IMEC,KU Leuven,,Partner
+IMEC,Hexa-X-II,,Contributor
+FCT,IT Portugal,,Funding
+Altice Labs,IT Portugal,,Innovation Partner
+Altice Labs,SNS JU,,Partner
+IT Portugal,SNS JU,,Project Partner
+U. Aveiro,IT Portugal,,Affiliation
+WINGS ICT,6G-IA,,Member
+WINGS ICT,Hexa-X-II,,Partner
+WINGS ICT,SUSTAIN-6G,,Partner
+ISI/Athena,SUNRISE-6G,,Coordinator
+SNS JU,SUNRISE-6G,,Funding
+SNS JU,6G-VERSUS,,Funding
+Telekom Slovenije,IJS,,Collaboration
+Call 3,SUSTAIN-6G,,Funds
+Nokia,SUSTAIN-6G,,Coordinator
+Orange,SUSTAIN-6G,,Tech Manager
+Eurescom,SUSTAIN-6G,,Innov Manager
+Deutsche Telekom,SUSTAIN-6G,,Partner
+Telefónica,SUSTAIN-6G,,Partner
+TIM,SUSTAIN-6G,,Partner
+6G Flagship,SUSTAIN-6G,,Partner
+IMEC,SUSTAIN-6G,,Partner
+CEA-Leti,SUSTAIN-6G,,Partner
+PoliTo,SUSTAIN-6G,,Partner
+Siemens,SUSTAIN-6G,,Partner
+John Deere,SUSTAIN-6G,,Partner
+Call 2,6G-PATH,,Funds
+Altice Labs,6G-PATH,,Partner
+IT Portugal,6G-PATH,,Partner
+OTE,6G-PATH,,Partner
+Orange RO,6G-PATH,,Partner
+Telefónica,6G-PATH,,R&D Partner
+Airbus,6G-PATH,,Partner
+U. Malaga,6G-PATH,,Partner
+Karlstad U,6G-PATH,,Partner
+Fraunhofer,6G-PATH,,Partner
+Vodafone,6G-ANNA,,Partner
+Bosch,6G-ANNA,,Partner
+Rohde & Schwarz,6G-ANNA,,Partner
+TU Dresden,6G-ANNA,,Partner
+TU Munich,6G-ANNA,,Partner
+RWTH Aachen,6G-ANNA,,Partner
+KIT,6G-ANNA,,Partner
+Airbus,6G-ANNA,,Partner
+Siemens,6G-ANNA,,Partner
+Ericsson,6G-ANNA,,Partner
+Fraunhofer,6G-ANNA,,Partner
+SAL,6G-IA,,Member
+AIT Austria,6G-IA,,Member
+NXP,SAL,,Industry Partner
+TU Wien,SAL,,Research Partner
+AIT Austria,XTRUST-6G,,Partner
+SERI,6G-XR,Funding (CH),National Grant
+Swisscom,6G-XR,,Partner
+ETH Zurich,6G-XR,,Partner
+EPFL,6G-IA,,Member
+UK Gov,EU Commission,Assoc.,Horizon Europe Assoc.
+Univ Bristol,6G-IA,,Member
+CERTH,XTRUST-6G,,Coordinator
+Telefónica,XTRUST-6G,,Partner
+TalTech,XTRUST-6G,,Partner
+Telekom Slovenije,XTRUST-6G,,Partner
+Univ Portsmouth,XTRUST-6G,,Partner
+Ericsson,XTRUST-6G,,Partner
+Call 1,Hexa-X-II,,Flagship Funding
+Call 1,6G-SANDBOX,,Funds
+Nokia,Hexa-X-II,,Project Lead
+Ericsson,Hexa-X-II,,Tech Manager
+Nokia,6G-ANNA,,Lead
+Nokia,6G-IA,,Chairs
+Deutsche Telekom,6G-IA,,Member
+Telefónica,6G-IA,,Member
+Telefónica,ENABLE-6G,,Partner
+IMDEA Networks,ENABLE-6G,,Coordination
+Spanish Gov,ENABLE-6G,UNICO,Funding
+i2CAT,6G-IA,,Member
+Orange,6G-IA,,Member
+Thales,6G-IA,,Member
+Airbus,Thales,,Space/NTN Collab
+CEA-Leti,RISE-6G,,Coordination
+6G Flagship,SUNRISE-6G,,Infrastructure Provider
+CEA-Leti,SUNRISE-6G,,Infrastructure Provider
+LMT,SUNRISE-6G,,Infrastructure Provider
+U. Malaga,SUNRISE-6G,,Infrastructure Provider
+Atos,SUNRISE-6G,,Integration Partner
+Atos,6G-IA,,Member
+NCBR,SUNRISE-6G,,Partner Agency
+VTT,6G-XR,,Partner
+Matsuko,6G-XR,,Partner
+Capgemini,6G-XR,,Partner
+Vicomtech,6G-XR,,Partner
+Telefónica,6G-XR,,Partner
+Ericsson,6G-XR,,Partner
+i2CAT,6G-XR,,Partner
+Call 2,6G-XR,,Funds
+NEC Labs,RISE-6G,,Partner
+Greenerwave,RISE-6G,,Tech Provider
+SNCF,RISE-6G,,Vertical (Rail)
+Stellantis,RISE-6G,,Vertical (Auto)
+Chalmers,RISE-6G,,Partner
+Aalborg Univ,RISE-6G,,Partner
+NKUA,RISE-6G,,Partner
+Orange,RISE-6G,,Partner
+TIM,RISE-6G,,Partner
+CNRS,RISE-6G,,Partner
+Keysight,6G-SANDBOX,,Coordinator
+Fraunhofer FOKUS,6G-SANDBOX,,Partner (Berlin)
+OTE,6G-SANDBOX,,Partner (Athens)
+U. Malaga,6G-SANDBOX,,Partner (Malaga)
+Nokia,6G-SANDBOX,,Partner
+Telefónica,6G-SANDBOX,,Partner
+6G Flagship,6G-VERSUS,,Coordinator
+ICCS,6G-VERSUS,,Tech Manager
+Call 2,6G-TWIN,,Funds
+Call 2,ROBUST-6G,,Funds
+Call 2,ETHER,,Funds
+Call 2,6G-SHINE,,Funds
+LIST,6G-TWIN,,Coordinator
+IMEC,6G-TWIN,,Partner
+Ericsson,ROBUST-6G,,Coordinator
+Telefónica,ROBUST-6G,,Partner
+Thales,ETHER,,Partner
+Aalborg Univ,6G-SHINE,,Coordinator
+Nokia,6G-SHINE,,Partner
+Bosch,6G-SHINE,,Partner
+CNIT,6G-SHINE,,Partner
+IMEC,6G-SHINE,,Partner
+Call 2,6G-BRICKS,,Funds
+ISI/Athena,6G-BRICKS,,Coordinator
+Iquadrat,6G-BRICKS,,Partner
+KU Leuven,6G-BRICKS,,Partner
+CEA-Leti,6G-BRICKS,,Partner
+Eurecom,6G-BRICKS,,Partner
+NI,6G-BRICKS,,Partner
+Intracom,6G-BRICKS,,Partner
+i2CAT,6G-BRICKS,,Partner
+Brainstorm,6G-BRICKS,,Partner
+Space Hellas,6G-BRICKS,,Partner
+OTE,6G-BRICKS,,Partner
+eBOS,6G-BRICKS,,Partner
+Lenovo,6G-BRICKS,,Partner
+Satways,6G-BRICKS,,Partner
+Call 2,6G-INTENSE,,Funds
+CTTC,6G-INTENSE,,Coordinator
+Nokia,6G-INTENSE,,Partner
+Orange,6G-INTENSE,,Partner
+Nextworks,6G-INTENSE,,Partner
+UGR,6G-INTENSE,,Partner
+Nearby,6G-INTENSE,,Partner
+Call 1,BeGREEN,,Funds
+Call 1,5G-EPICENTRE,,Funds
+Call 1,FIDAL,,Funds
+Call 1,IMAGINE-B5G,,Funds
+Call 1,SEASON,,Funds
+Call 1,VERGE-C1,,Funds
+Call 2,6G-MIRAI,,Funds
+Call 2,6G-NTN,,Funds
+Call 2,6G-SENSES,,Funds
+Call 2,6G-DISCO,,Funds
+Call 2,6G-GOALS,,Funds
+Call 2,ADROIT6G,,Funds
+Call 2,ASSET-6G,,Funds
+Call 2,BELIEVE-6G,,Funds
+Call 2,CENTRIC,,Funds
+Call 2,COMBO-6G,,Funds
+Call 2,DETERMINISTIC6G,,Funds
+Call 2,EXIGENCE,,Funds
+Call 2,FLEX-SCALE,,Funds
+Call 2,HORSE,,Funds
+Call 2,INSTINCT,,Funds
+Call 2,ORIGAMI,,Funds
+Call 2,PREDICT-6G,,Funds
+Call 2,TERRAMETA,,Funds
+Call 2,TIMES,,Funds
+Call 2,VERGE,,Funds
