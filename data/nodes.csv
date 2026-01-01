@@ -1,99 +1,155 @@
 id,group,label,size,desc,url
-SNS JU,1,SNS JU,30,"Public-Private Partnership. Budget: €900M EU + €900M Industry = €1.8B.",https://smart-networks.europa.eu/
-EU Commission,1,EU Commission,25,Provides public funding under Horizon Europe.,https://research-and-innovation.ec.europa.eu/
-NextGenEU,1,NextGenerationEU,28,EU Recovery Instrument. Primary source for UNICO (Spain) & RESTART (Italy).,https://next-generation-eu.europa.eu/
-6G-IA,1,6G-IA,20,Industry Association. Represents private sector matching funds.,https://6g-ia.eu/
-Eurescom,1,Eurescom,15,Provides administrative support to SNS JU.,https://www.eurescom.eu/
-EDF,1,EDF (Defence Fund),20,European Defence Fund. Funding dual-use/military projects like VANTAGE.,https://defence-industry-space.ec.europa.eu/eu-defence-industry/european-defence-fund-edf_en
-BMBF,2,BMBF (DE),20,German Federal Ministry. Total program volume ~€700M.,https://www.bmbf.de/bmbf/en/home/home.html
-France 2030,2,France 2030,20,French National Strategy. Focused on strategic autonomy.,https://www.gouvernement.fr/france-2030
-PEPR Networks,2,PEPR Networks,18,"Priority Research Program for Future Networks. Co-led by CEA, CNRS, IMT.",https://www.pepr-reseaux-futur.fr/
-France 6G,2,France 6G,16,National platform launched by IMT to unite ecosystem & standardization.,https://www.imt.fr/en/
-Business Finland,2,Business Finland,18,Finnish innovation funding agency.,https://www.businessfinland.fi/en
-Spanish Gov,2,Spanish Gov (UNICO),18,UNICO I+D 6G Program funded by NextGenEU (>€100M).,https://avancedigital.mineco.gob.es/banda-ancha/plan-unico/Paginas/plan-unico.aspx
-UK Gov,2,UK Gov,18,Wireless Infrastructure Strategy. Associated to Horizon Europe (2024).,https://www.gov.uk/government/publications/wireless-infrastructure-strategy
-RESTART,2,RESTART (Italy),18,Italian program for Future Telecoms. €118M budget (PNRR).,https://www.restart-project.it/
-FNS,2,FNS (Netherlands),18,Future Network Services. ~€203M National Growth Fund.,https://futurenetworkservices.nl/
-BELSPO,2,BELSPO (Belgium),18,Belgian Science Policy Office.,https://www.belspo.be/
-FCT,2,FCT (Portugal),18,Fundação para a Ciência e a Tecnologia. Public funding agency.,https://www.fct.pt/
-NCBR,2,NCBR (Poland),18,National Centre for Research and Development. Polish funding agency.,https://www.gov.pl/web/ncbr
-Polish Presidency,2,Polish Presidency '25,18,EU Council Presidency 2025. Pushing 'Digital Networks Act'.,https://pl2025.eu/
-SAL,2,Silicon Austria Labs,18,Austria's top research center for EBS. Focus on 6G Sensing & Hardware.,https://silicon-austria-labs.com/
-SERI,2,SERI (Switzerland),18,Swiss State Secretariat for Education. Funds Swiss partners in SNS JU.,https://www.sbfi.admin.ch/sbfi/en/home.html
-Nokia,3,Nokia,24,"Leading Hexa-X, 6G-ANNA. Chair of 6G-IA. Coordinator of SUSTAIN-6G.",https://www.nokia.com/networks/6g/
-Ericsson,3,Ericsson,22,Tech Manager in Hexa-X. Focus on sustainability.,https://www.ericsson.com/en/6g
-Deutsche Telekom,3,D. Telekom,20,Leading operator. Focus on 6G-TakeOff (NTN).,https://www.telekom.com/en/company/digital-responsibility/details/6g-research-1033604
-Orange,3,Orange,20,Major French Operator. Active in PEPR & France 6G. Tech Manager of SUSTAIN-6G.,https://hellofuture.orange.com/en/6g/
-Telefónica,3,Telefónica,22,Major operator. Heavily involved in UNICO & 6G-IA.,https://www.telefonica.com/en/communication-room/blog/6g-technology/
-Thales,3,Thales,18,Security & Space. Key player in French ecosystem.,https://www.thalesgroup.com/en
-Airbus,3,Airbus,18,Defense & Space. Key for NTN.,https://www.airbus.com/en/products-services/defence-space
-TIM,3,TIM (Telecom Italia),18,Key partner in RESTART program.,https://www.gruppotim.it/en.html
-IS-Wireless,3,IS-Wireless,18,Polish pioneer in Open RAN & 6G technologies.,https://is-wireless.com/
-Orange PL,3,Orange PL,16,Orange Poland. Active innovation arm in Warsaw.,https://biuroprasowe.orange.pl/
-LMT,3,LMT (Latvia),18,Latvian Mobile Telephone. Leading VANTAGE drone project & 6G-IA member.,https://innovations.lmt.lv/en
-Altice Labs,3,Altice Labs (PT),18,Innovation center in Aveiro. Focus on optical networks & 6G.,https://www.alticelabs.com/
-KPN,3,KPN (NL),18,Dutch telecom operator. Member of 6G-IA.,https://www.kpn.com/
-Swisscom,3,Swisscom (CH),18,Leading Swiss operator. Partner in 6G-XR and 5G-PPP projects.,https://www.swisscom.ch/en/business/enterprise/topics/innovation.html
-NXP,3,NXP (AT),18,Semiconductors & Security Hardware. Key Austrian industry player.,https://www.nxp.com/
-WINGS ICT,3,WINGS ICT (GR),18,Greek SME driving 6G AI & vertical platforms.,https://www.wings-ict-solutions.eu/
-Telekom Slovenije,3,Telekom Slovenije,16,Leading Slovenian operator. Advanced 5G SA & innovation pilot.,https://www.telekom.si/
-Siemens,3,Siemens,18,Focus on Industrial 6G & Digital Twins.,https://www.siemens.com/global/en.html
-John Deere,3,John Deere,16,Smart Agriculture. Partner in SUSTAIN-6G.,https://www.deere.com/
-OTE,3,OTE (Greece),16,Greek Telecom. Key partner in 6G-PATH pilots.,https://www.cosmote.gr/
-Orange RO,3,Orange Romania,16,Leading Education vertical pilots in 6G-PATH.,https://www.orange.ro/
-Vodafone,3,Vodafone,18,Global Operator. Partner in 6G-ANNA.,https://www.vodafone.com/
-Bosch,3,Bosch,18,Industrial & Automotive giant. Partner in 6G-ANNA.,https://www.bosch.com/
-Rohde & Schwarz,3,Rohde & Schwarz,16,Test & Measurement leader. Partner in 6G-ANNA.,https://www.rohde-schwarz.com/
-Atos,3,Atos (Eviden),18,Digital integration giant. Key partner in SUNRISE-6G federation.,https://eviden.com/
-Matsuko,3,Matsuko (SK),16,Holographic calling tech. 6G-XR SME partner.,https://www.matsuko.com/
-Capgemini,3,Capgemini (ES),16,Integration & Cloud. Partner in 6G-XR.,https://www.capgemini.com/
-Hexa-X-II,4,Hexa-X-II,22,The European 6G System Blueprint.,https://hexa-x-ii.eu/
-RISE-6G,4,RISE-6G,16,Reconfigurable Intelligent Surfaces (RIS).,https://rise-6g.eu/
-6G-ANNA,4,6G-ANNA,22,German Industrial Lighthouse Project. Led by Nokia.,https://www.6g-anna.de/
-ENABLE-6G,4,ENABLE-6G,16,Privacy & Energy Efficiency. Led by IMDEA Networks.,https://networks.imdea.org/research/projects/enable-6g/
-EuCNC 2025,4,EuCNC 2025 (Poznań),16,Major 6G Summit hosted in Poland.,https://www.eucnc.eu/
-VANTAGE,4,VANTAGE (Drones),16,Next-Gen Tactical Drones. €10M EDF Grant.,https://labsoflatvia.com/en/news/lmt-to-join-forces-with-foreign-partners-to-develop-next-generation-tactical-drones
-XTRUST-6G,4,XTRUST-6G,18,Zero-Trust Security. Coordinated by CERTH (Greece).,https://xtrust-6g.eu/
-SUSTAIN-6G,8,SUSTAIN-6G,20,Sustainability Lighthouse Project. Led by Nokia & Orange.,https://sustain-6g.eu/
-6G-XR,4,6G-XR,18,Holographic comms & XR.,https://6g-xr.eu/
-SUNRISE-6G,4,SUNRISE-6G,16,Federation of 6G Infrastructures.,https://sunrise6g.eu/
-6G-VERSUS,4,6G-VERSUS,16,Sustainability & Vertical Pilots (Bulgaria, Greece).,https://6g-versus.eu/
-6G-SANDBOX,6,6G-SANDBOX,12,Experimental infrastructure.,https://6g-sandbox.eu/
-6G-PATH,7,6G-PATH,20,"Pilots & Trials in Health, Education, Farming & Cities.",https://6gpath.eu/
-6G Flagship,5,6G Flagship,18,Univ. of Oulu. €251M budget (2018-2026).,https://www.6gflagship.com/
-CEA-Leti,5,CEA-Leti,16,French Sub-THz hardware. Co-director of PEPR.,https://www.leti-cea.com/cea-tech/leti/english
-CNRS,5,CNRS,17,French National Centre for Scientific Research.,https://www.cnrs.fr/en
-IMT,5,Institut Mines-Télécom,17,Leading French engineering group.,https://www.imt.fr/en/
-Fraunhofer,5,Fraunhofer,16,German applied research institutes.,https://www.fraunhofer.de/en.html
-IMDEA Networks,5,IMDEA Networks,18,Madrid based. Leading ENABLE-6G.,https://networks.imdea.org/
-Univ Bristol,5,Univ Bristol,16,Leads JOINER testbed in UK.,https://www.bristol.ac.uk/engineering/research/smart/
-CNIT,5,CNIT (Italy),16,National Consortium for Telecommunications.,https://www.cnit.it/en/
-i2CAT,5,i2CAT (Spain),16,Catalan research center.,https://i2cat.net/
-TNO,5,TNO (Netherlands),16,Leading the FNS program.,https://www.tno.nl/en/
-TU Delft,5,TU Delft,16,Technical University. FNS Partner.,https://www.tudelft.nl/en/
-TalTech,5,TalTech (Estonia),16,Tallinn University of Technology.,https://taltech.ee/en/comsys
-Photonics LT,5,Photonics LT (Lithuania),16,Lithuanian Laser & Photonics Cluster.,https://ltoptics.org/en/
-IMEC,5,IMEC,22,World-leading R&D hub in nanoelectronics.,https://www.imec-int.com/en
-KU Leuven,5,KU Leuven,16,Top-ranked university partner of IMEC.,https://www.kuleuven.be/english/
-IT Portugal,5,IT (Portugal),18,Instituto de Telecomunicações.,https://www.it.pt/
-U. Aveiro,5,Univ. Aveiro,16,5G/6G Competence Center.,https://www.ua.pt/
-IJS,5,Institute Jožef Stefan (SI),16,Slovenia's leading research institute.,https://www.ijs.si/
-ISI/Athena,5,ISI/Athena (GR),16,Industrial Systems Institute.,https://www.isi.gr/en/
-CERTH,5,CERTH (GR),18,Centre for Research & Technology Hellas.,https://www.certh.gr/
-Univ Portsmouth,5,Univ. Portsmouth (UK),16,UK Partner in XTRUST-6G.,https://www.port.ac.uk/
-PoliTo,5,Politecnico di Torino,16,Key academic partner in SUSTAIN-6G.,https://www.polito.it/en/
-U. Malaga,5,Univ. Málaga,16,Active in 6G-PATH.,https://www.uma.es/
-Karlstad U,5,Karlstad Univ (SE),16,Swedish partner in 6G-PATH pilots.,https://www.kau.se/en
-TU Dresden,5,TU Dresden,16,Tactile Internet & 5G/6G Lab.,https://tu-dresden.de/
-TU Munich,5,TU Munich,16,Robotics & Networking.,https://www.tum.de/en/
-RWTH Aachen,5,RWTH Aachen,16,Communication engineering.,https://www.rwth-aachen.de/go/id/a/?lidx=1
-KIT,5,KIT (Karlsruhe),16,Network architecture.,https://www.kit.edu/english/index.php
-ETH Zurich,5,ETH Zurich,16,Global top-tier university.,https://ethz.ch/en.html
-EPFL,5,EPFL (CH),16,Lausanne Polytechnic.,https://www.epfl.ch/en/
-AIT Austria,5,AIT (Austria),16,Austrian Institute of Technology.,https://www.ait.ac.at/en/
-TU Wien,5,TU Wien,16,Vienna Univ. of Tech.,https://www.tuwien.at/en/
-VTT,5,VTT (Finland),18,Leading research institute. Key partner in 6G-XR.,https://www.vttresearch.com/
-Vicomtech,5,Vicomtech (Spain),16,Applied Research in AI & Visual Computing.,https://www.vicomtech.org/
-Call 1,6,Call 1 (2022),20,Focus: 5G Evolution. Approx ~€380M budget.,https://smart-networks.europa.eu/project-portfolio/
-Call 2,7,Call 2 (2023),20,Focus: Detailed Design. Approx ~€130M budget.,https://smart-networks.europa.eu/project-portfolio/
-Call 3,8,Call 3 (2024),20,Focus: Consolidation & Pilots.,https://smart-networks.europa.eu/project-portfolio/
+"SNS JU",1,"SNS JU",30,"Public-Private Partnership. Budget: €900M EU + €900M Industry = €1.8B.","https://smart-networks.europa.eu/"
+"EU Commission",1,"EU Commission",25,"Provides public funding under Horizon Europe.","https://research-and-innovation.ec.europa.eu/"
+"NextGenEU",1,"NextGenEU",28,"EU Recovery Instrument. Primary source for UNICO (Spain) & RESTART (Italy).","https://next-generation-eu.europa.eu/"
+"6G-IA",1,"6G-IA",20,"Industry Association. Represents private sector matching funds.","https://6g-ia.eu/"
+"Eurescom",1,"Eurescom",15,"Provides administrative support to SNS JU.","https://www.eurescom.eu/"
+"EDF",1,"EDF (Defence Fund)",20,"European Defence Fund. Funding dual-use/military projects like VANTAGE.","https://defence-industry-space.ec.europa.eu/eu-defence-industry/european-defence-fund-edf_en"
+"BMBF",2,"BMBF (DE)",20,"German Federal Ministry. Total program volume ~€700M.","https://www.bmbf.de/bmbf/en/home/home.html"
+"France 2030",2,"France 2030",20,"French National Strategy. Focused on strategic autonomy.","https://www.gouvernement.fr/france-2030"
+"PEPR Networks",2,"PEPR Networks",18,"Priority Research Program for Future Networks. Co-led by CEA, CNRS, IMT.","https://www.pepr-reseaux-futur.fr/"
+"France 6G",2,"France 6G",16,"National platform launched by IMT to unite ecosystem & standardization.","https://www.imt.fr/en/"
+"Business Finland",2,"Business Finland",18,"Finnish innovation funding agency.","https://www.businessfinland.fi/en"
+"Spanish Gov",2,"Spanish Gov (UNICO)",18,"UNICO I+D 6G Program funded by NextGenEU (>€100M).","https://avancedigital.mineco.gob.es/banda-ancha/plan-unico/Paginas/plan-unico.aspx"
+"UK Gov",2,"UK Gov",18,"Wireless Infrastructure Strategy. Associated to Horizon Europe (2024).","https://www.gov.uk/government/publications/wireless-infrastructure-strategy"
+"RESTART",2,"RESTART (Italy)",18,"Italian program for Future Telecoms. €118M budget (PNRR).","https://www.restart-project.it/"
+"FNS",2,"FNS (Netherlands)",18,"Future Network Services. ~€203M National Growth Fund.","https://futurenetworkservices.nl/"
+"BELSPO",2,"BELSPO (Belgium)",18,"Belgian Science Policy Office.","https://www.belspo.be/"
+"FCT",2,"FCT (Portugal)",18,"Fundação para a Ciência e a Tecnologia. Public funding agency.","https://www.fct.pt/"
+"NCBR",2,"NCBR (Poland)",18,"National Centre for Research and Development. Polish funding agency.","https://www.gov.pl/web/ncbr"
+"Polish Presidency",2,"Polish Presidency '25",18,"EU Council Presidency 2025. Pushing 'Digital Networks Act'.","https://pl2025.eu/"
+"SAL",2,"Silicon Austria Labs",18,"Austria's top research center for EBS. Focus on 6G Sensing & Hardware.","https://silicon-austria-labs.com/"
+"SERI",2,"SERI (Switzerland)",18,"Swiss State Secretariat for Education. Funds Swiss partners in SNS JU (e.g. 6G-XR).","https://www.sbfi.admin.ch/sbfi/en/home.html"
+"Nokia",3,"Nokia",24,"Leading Hexa-X, 6G-ANNA. Chair of 6G-IA. Coordinator of SUSTAIN-6G.","https://www.nokia.com/networks/6g/"
+"Ericsson",3,"Ericsson",22,"Tech Manager in Hexa-X. Coordinator of ROBUST-6G.","https://www.ericsson.com/en/6g"
+"Deutsche Telekom",3,"D. Telekom",20,"Leading operator. Focus on 6G-TakeOff (NTN).","https://www.telekom.com/en/company/digital-responsibility/details/6g-research-1033604"
+"Orange",3,"Orange",20,"Major French Operator. Active in PEPR & France 6G. Tech Manager of SUSTAIN-6G.","https://hellofuture.orange.com/en/6g/"
+"Telefónica",3,"Telefónica",22,"Major operator. Heavily involved in UNICO & 6G-IA.","https://www.telefonica.com/en/communication-room/blog/6g-technology/"
+"Thales",3,"Thales",18,"Security & Space. Key player in French ecosystem & ETHER.","https://www.thalesgroup.com/en"
+"Airbus",3,"Airbus",18,"Defense & Space. Key for NTN.","https://www.airbus.com/en/products-services/defence-space"
+"TIM",3,"TIM (Telecom Italia)",18,"Key partner in RESTART program.","https://www.gruppotim.it/en.html"
+"IS-Wireless",3,"IS-Wireless",18,"Polish pioneer in Open RAN & 6G technologies.","https://is-wireless.com/"
+"Orange PL",3,"Orange PL",16,"Orange Poland. Active innovation arm in Warsaw.","https://biuroprasowe.orange.pl/"
+"LMT",3,"LMT (Latvia)",18,"Latvian Mobile Telephone. Leading VANTAGE drone project & 6G-IA member.","https://innovations.lmt.lv/en"
+"Altice Labs",3,"Altice Labs (PT)",18,"Innovation center in Aveiro. Focus on optical networks & 6G.","https://www.alticelabs.com/"
+"KPN",3,"KPN (NL)",18,"Dutch telecom operator. Member of 6G-IA.","https://www.kpn.com/"
+"Swisscom",3,"Swisscom (CH)",18,"Leading Swiss operator. Partner in 6G-XR and 5G-PPP projects.","https://www.swisscom.ch/en/business/enterprise/topics/innovation.html"
+"NXP",3,"NXP (AT)",18,"Semiconductores & Security Hardware. Key Austrian industry player.","https://www.nxp.com/"
+"WINGS ICT",3,"WINGS ICT (GR)",18,"Greek SME driving 6G AI & vertical platforms. Partner in Hexa-X & SUSTAIN-6G.","https://www.wings-ict-solutions.eu/"
+"Telekom Slovenije",3,"Telekom Slovenije",16,"Leading Slovenian operator. Advanced 5G SA & innovation pilot.","https://www.telekom.si/"
+"Siemens",3,"Siemens",18,"Focus on Industrial 6G & Digital Twins. Partner in SUSTAIN-6G & 6G-ANNA.","https://www.siemens.com/global/en.html"
+"John Deere",3,"John Deere",16,"Smart Agriculture. Partner in SUSTAIN-6G for vertical use cases.","https://www.deere.com/"
+"OTE",3,"OTE (Greece)",16,"Greek Telecom. Key partner in 6G-PATH pilots.","https://www.cosmote.gr/"
+"Orange RO",3,"Orange Romania",16,"Leading Education vertical pilots in 6G-PATH.","https://www.orange.ro/"
+"Vodafone",3,"Vodafone",18,"Global Operator. Partner in 6G-ANNA.","https://www.vodafone.com/"
+"Bosch",3,"Bosch",18,"Industrial & Automotive giant. Partner in 6G-ANNA.","https://www.bosch.com/"
+"Rohde & Schwarz",3,"Rohde & Schwarz",16,"Test & Measurement leader. Partner in 6G-ANNA.","https://www.rohde-schwarz.com/"
+"Atos",3,"Atos (Eviden)",18,"Digital integration giant. Key partner in SUNRISE-6G federation.","https://eviden.com/"
+"Matsuko",3,"Matsuko (SK)",16,"Holographic calling tech. 6G-XR SME partner.","https://www.matsuko.com/"
+"Capgemini",3,"Capgemini (ES)",16,"Integration & Cloud. Partner in 6G-XR.","https://www.capgemini.com/"
+"NEC Labs",3,"NEC Labs (DE)",16,"Key industrial partner in RISE-6G.","https://www.neclab.eu/"
+"Greenerwave",3,"Greenerwave (FR)",16,"Deeptech startup. Hardware provider for RIS surfaces.","https://greenerwave.com/"
+"SNCF",3,"SNCF (FR)",16,"French Railways. Vertical user for RIS in high-speed trains.","https://www.sncf.com/"
+"Stellantis",3,"Stellantis (IT/FR)",16,"Automotive giant. Vertical user for RIS in vehicles.","https://www.stellantis.com/"
+"Keysight",3,"Keysight (BE/US)",18,"Measurement Giant. Project Coordinator of 6G-SANDBOX.","https://www.keysight.com/"
+"Iquadrat",3,"Iquadrat (ES)",16,"SME focused on network simulation. Partner in 6G-BRICKS.","https://www.iquadrat.com/"
+"Brainstorm",3,"Brainstorm (ES)",16,"Real-time 3D graphics & virtual studios. 6G-BRICKS partner.","https://www.brainstorm3d.com/"
+"NI",3,"NI Dresden (DE)",16,"National Instruments. RF Testbeds. 6G-BRICKS partner.","https://www.ni.com/"
+"Intracom",3,"Intracom (GR)",16,"Telecom solutions provider. 6G-BRICKS partner.","https://www.intracom-telecom.com/"
+"Space Hellas",3,"Space Hellas (GR)",16,"System integrator. 6G-BRICKS partner.","https://www.space.gr/en"
+"eBOS",3,"eBOS (CY)",16,"R&D SME, quality assurance. 6G-BRICKS partner.","https://www.ebos.com.cy/"
+"Lenovo",3,"Lenovo",16,"Global technology leader. 6G-BRICKS partner.","https://www.lenovo.com/"
+"Satways",3,"Satways (GR)",16,"Geospatial solutions SME. 6G-BRICKS partner.","http://www.satways.net/"
+"Nextworks",3,"Nextworks (IT)",16,"SME specialized in SDN/NFV orchestration. Partner in 6G-INTENSE.","https://www.nextworks.it/"
+"Nearby",3,"Nearby Computing (ES)",16,"Edge Computing orchestration. Partner in 6G-INTENSE.","https://www.nearbycomputing.com/"
+"Hexa-X-II",4,"Hexa-X-II",22,"The European 6G System Blueprint.","https://hexa-x-ii.eu/"
+"RISE-6G",4,"RISE-6G",16,"Reconfigurable Intelligent Surfaces (RIS).","https://rise-6g.eu/"
+"6G-ANNA",4,"6G-ANNA",22,"German Industrial Lighthouse Project. Led by Nokia.","https://www.6g-anna.de/"
+"ENABLE-6G",4,"ENABLE-6G",16,"Privacy & Energy Efficiency. Led by IMDEA Networks.","https://networks.imdea.org/research/projects/enable-6g/"
+"EuCNC 2025",4,"EuCNC 2025 (Poznań)",16,"Major 6G Summit hosted in Poland. Key ecosystem gathering.","https://www.eucnc.eu/"
+"VANTAGE",4,"VANTAGE (Drones)",16,"Next-Gen Tactical Drones (5G-Adv/6G Path). €10M EDF Grant.","https://labsoflatvia.com/en/news/lmt-to-join-forces-with-foreign-partners-to-develop-next-generation-tactical-drones"
+"XTRUST-6G",4,"XTRUST-6G",18,"Zero-Trust Security. Coordinated by CERTH (Greece) with 19 partners.","https://xtrust-6g.eu/"
+"SUSTAIN-6G",8,"SUSTAIN-6G",20,"Sustainability Lighthouse Project. Led by Nokia, Orange & Eurescom.","https://sustain-6g.eu/"
+"6G-XR",4,"6G-XR",18,"Holographic comms & XR. Key Swiss participation & mixed EU funding.","https://6g-xr.eu/"
+"SUNRISE-6G",4,"SUNRISE-6G",16,"Federation of 6G Infrastructures. Coordinated by ISI/Athena (Greece).","https://sunrise6g.eu/"
+"6G-VERSUS",4,"6G-VERSUS",16,"Sustainability & Vertical Pilots (Bulgaria, Greece). Led by Univ. Oulu.","https://6g-versus.eu/"
+"6G-SANDBOX",6,"6G-SANDBOX",20,"Pan-European Testbed. Coordinated by Keysight.","https://6g-sandbox.eu/"
+"6G-PATH",7,"6G-PATH",20,"Pilots & Trials in Health, Education, Farming & Cities.","https://6gpath.eu/"
+"6G-BRICKS",7,"6G-BRICKS",18,"Reusable Testbed Infrastructures (Call 2). Coordinated by ISI/Athena.","https://6g-bricks.eu/"
+"6G-INTENSE",7,"6G-INTENSE",18,"Native AI for Intent-based Networking (Call 2). Coordinated by CTTC.","https://6g-intense.eu/"
+"6G-TWIN",7,"6G-TWIN",18,"Digital Twin for 6G networks. Coordinated by LIST.","https://6g-twin.eu/"
+"ROBUST-6G",7,"ROBUST-6G",18,"Security & Resilience. Coordinated by Ericsson.","https://robust-6g.eu/"
+"ETHER",7,"ETHER",18,"Integrated Terrestrial/Non-Terrestrial Networks. 3D Architecture.","https://ether-project.eu/"
+"6G-SHINE",7,"6G-SHINE",18,"Short Range Extreme Communication (In-X). Coordinated by Aalborg Univ.","https://6gshine.eu/"
+"6G-MIRAI",7,"6G-MIRAI",15,"AI-native wireless systems. Call 2.","https://smart-networks.europa.eu/project/6g-mirai/"
+"6G-NTN",7,"6G-NTN",15,"Non-Terrestrial Networks. Call 2.","https://smart-networks.europa.eu/project/6g-ntn/"
+"6G-SENSES",7,"6G-SENSES",15,"Integrated Sensing & Comms. Call 2.","https://smart-networks.europa.eu/project/6g-senses/"
+"6G-DISCO",7,"6G-DISCO",15,"Distributed Intelligence. Call 2.","https://smart-networks.europa.eu/project/6g-disco/"
+"6G-GOALS",7,"6G-GOALS",15,"Goal-oriented AI. Call 2.","https://smart-networks.europa.eu/project/6g-goals/"
+"ADROIT6G",7,"ADROIT6G",15,"Distributed AI. Call 2.","https://smart-networks.europa.eu/project/adroit6g/"
+"ASSET-6G",7,"ASSET-6G",15,"Secure Sustainable Edge. Call 2.","https://smart-networks.europa.eu/project/asset-6g/"
+"BELIEVE-6G",7,"BELIEVE-6G",15,"Optical/Radio. Call 2.","https://smart-networks.europa.eu/project/believe-6g/"
+"CENTRIC",7,"CENTRIC",15,"User-centric AI. Call 2.","https://smart-networks.europa.eu/project/centric/"
+"COMBO-6G",7,"COMBO-6G",15,"Comms & Compute. Call 2.","https://smart-networks.europa.eu/project/combo-6g/"
+"DETERMINISTIC6G",7,"DETERMINISTIC6G",15,"Industrial Deterministic. Call 2.","https://smart-networks.europa.eu/project/deterministic6g/"
+"EXIGENCE",7,"EXIGENCE",15,"Energy Efficiency. Call 2.","https://smart-networks.europa.eu/project/exigence/"
+"FLEX-SCALE",7,"FLEX-SCALE",15,"Optical Transport. Call 2.","https://smart-networks.europa.eu/project/flex-scale/"
+"HORSE",7,"HORSE",15,"Security/Resilience. Call 2.","https://smart-networks.europa.eu/project/horse/"
+"INSTINCT",7,"INSTINCT",15,"Sensing & Comms. Call 2.","https://smart-networks.europa.eu/project/instinct/"
+"ORIGAMI",7,"ORIGAMI",15,"Global Architecture. Call 2.","https://smart-networks.europa.eu/project/origami/"
+"PREDICT-6G",7,"PREDICT-6G",15,"Predictive Networks. Call 2.","https://smart-networks.europa.eu/project/predict-6g/"
+"TERRAMETA",7,"TERRAMETA",15,"THz Metasurfaces. Call 2.","https://smart-networks.europa.eu/project/terrameta/"
+"TIMES",7,"TIMES",15,"THz Mesh. Call 2.","https://smart-networks.europa.eu/project/times/"
+"VERGE",7,"VERGE",15,"Edge AI Green. Call 2.","https://smart-networks.europa.eu/project/verge/"
+"BeGREEN",6,"BeGREEN",15,"Energy Efficiency. Call 1.","https://begreen-project.eu/"
+"5G-EPICENTRE",6,"5G-EPICENTRE",15,"Public Protection & Disaster Relief. Call 1.","https://5gepicentre.eu/"
+"FIDAL",6,"FIDAL",15,"Large Scale Field Trials. Call 1.","https://fidal-he.eu/"
+"IMAGINE-B5G",6,"IMAGINE-B5G",15,"Advanced 5G/6G Infrastructure. Call 1.","https://imagine-b5g.eu/"
+"SEASON",6,"SEASON",15,"Sustainable Transport Infrastructure. Call 1.","https://season-project.eu/"
+"VERGE-C1",6,"VERGE (C1)",15,"Edge Computing Evolution. Call 1.","https://verge-project.eu/"
+"6G Flagship",5,"6G Flagship",18,"Univ. of Oulu. €251M budget (2018-2026). Pioneer of 6G vision.","https://www.6gflagship.com/"
+"CEA-Leti",5,"CEA-Leti",16,"French Sub-THz hardware. Co-director of PEPR.","https://www.leti-cea.com/cea-tech/leti/english"
+"CNRS",5,"CNRS",17,"French National Centre for Scientific Research. Co-director of PEPR.","https://www.cnrs.fr/en"
+"IMT",5,"Institut Mines-Télécom",17,"Leading French engineering group. Co-director of PEPR & France 6G.","https://www.imt.fr/en/"
+"Fraunhofer",5,"Fraunhofer",16,"German applied research institutes.","https://www.fraunhofer.de/en.html"
+"Fraunhofer FOKUS",5,"Fraunhofer FOKUS",16,"Berlin Testbed leader for 6G-SANDBOX.","https://www.fokus.fraunhofer.de/en"
+"IMDEA Networks",5,"IMDEA Networks",18,"Madrid based. Leading TUCAN6-CM & ENABLE-6G.","https://networks.imdea.org/"
+"Univ Bristol",5,"Univ Bristol",16,"Leads JOINER testbed in UK. Horizon Europe Partner.","https://www.bristol.ac.uk/engineering/research/smart/"
+"CNIT",5,"CNIT (Italy)",16,"National Consortium for Telecommunications. Key in RESTART.","https://www.cnit.it/en/"
+"i2CAT",5,"i2CAT (Spain)",16,"Catalan research center. Active in UNICO projects.","https://i2cat.net/"
+"TNO",5,"TNO (Netherlands)",16,"Leading the FNS program.","https://www.tno.nl/en/"
+"TU Delft",5,"TU Delft",16,"Technical University. FNS Partner.","https://www.tudelft.nl/en/"
+"TalTech",5,"TalTech (Estonia)",16,"Tallinn University of Technology. Focus on 6G security & autonomous systems.","https://taltech.ee/en/comsys"
+"Photonics LT",5,"Photonics LT (Lithuania)",16,"Lithuanian Laser & Photonics Cluster. Crucial for optical/THz comms.","https://ltoptics.org/en/"
+"IMEC",5,"IMEC (Belgium)",22,"World-leading R&D hub in nanoelectronics and digital technologies.","https://www.imec-int.com/en"
+"KU Leuven",5,"KU Leuven",16,"Top-ranked university, partner of IMEC.","https://www.kuleuven.be/english/"
+"IT Portugal",5,"IT (Portugal)",18,"Instituto de Telecomunicações. Key 6G research institute.","https://www.it.pt/"
+"U. Aveiro",5,"Univ. Aveiro",16,"5G/6G Competence Center. Linked to Altice & IT.","https://www.ua.pt/"
+"IJS",5,"Institute Jožef Stefan (SI)",16,"Slovenia's leading research institute. AI & Robotics focus.","https://www.ijs.si/"
+"ISI/Athena",5,"ISI/Athena (GR)",16,"Industrial Systems Institute. Coordinator of SUNRISE-6G.","https://www.isi.gr/en/"
+"CERTH",5,"CERTH (GR)",18,"Centre for Research & Technology Hellas. XTRUST-6G Coordinator.","https://www.certh.gr/"
+"ICCS",5,"ICCS (GR)",16,"Institute of Communication & Computer Systems. Tech Manager of 6G-VERSUS.","https://www.iccs.gr/en/"
+"Univ Portsmouth",5,"Univ. Portsmouth (UK)",16,"UK Partner in XTRUST-6G.","https://www.port.ac.uk/"
+"PoliTo",5,"Politecnico di Torino",16,"Key academic partner in SUSTAIN-6G.","https://www.polito.it/en/"
+"U. Malaga",5,"Univ. Málaga",16,"Active in 6G-PATH & 6G-SANDBOX.","https://www.uma.es/"
+"Karlstad U",5,"Karlstad Univ (SE)",16,"Swedish partner in 6G-PATH pilots.","https://www.kau.se/en"
+"TU Dresden",5,"TU Dresden",16,"Tactile Internet & 5G/6G Lab. Partner in 6G-ANNA.","https://tu-dresden.de/"
+"TU Munich",5,"TU Munich",16,"Robotics & Networking. Partner in 6G-ANNA.","https://www.tum.de/en/"
+"RWTH Aachen",5,"RWTH Aachen",16,"Communication engineering. Partner in 6G-ANNA.","https://www.rwth-aachen.de/go/id/a/?lidx=1"
+"KIT",5,"KIT (Karlsruhe)",16,"Network architecture. Partner in 6G-ANNA.","https://www.kit.edu/english/index.php"
+"ETH Zurich",5,"ETH Zurich",16,"Global top-tier university. AI & Wireless. Partner in 6G-XR.","https://ethz.ch/en.html"
+"EPFL",5,"EPFL (CH)",16,"Lausanne Polytechnic. Robotics & new materials.","https://www.epfl.ch/en/"
+"AIT Austria",5,"AIT (Austria)",16,"Austrian Institute of Technology. Resilient systems & cybersecurity.","https://www.ait.ac.at/en/"
+"TU Wien",5,"TU Wien",16,"Vienna Univ. of Tech. Millimeter-wave research.","https://www.tuwien.at/en/"
+"VTT",5,"VTT (Finland)",18,"Leading research institute. Key partner in 6G-XR.","https://www.vttresearch.com/"
+"Vicomtech",5,"Vicomtech (Spain)",16,"Applied Research in AI & Visual Computing. 6G-XR partner.","https://www.vicomtech.org/"
+"Chalmers",5,"Chalmers Univ. (SE)",16,"Antenna systems expert. Partner in RISE-6G.","https://www.chalmers.se/en/"
+"Aalborg Univ",5,"Aalborg Univ. (DK)",16,"IoT Connectivity leader. Partner in RISE-6G.","https://www.en.aau.dk/"
+"NKUA",5,"NKUA (GR)",16,"Univ. of Athens. RIS control theory. Partner in RISE-6G.","https://en.uoa.gr/"
+"LIST",5,"LIST (Luxembourg)",16,"Luxembourg Institute of Science and Technology. Coordinator of 6G-TWIN.","https://www.list.lu/en/"
+"Eurecom",5,"Eurecom (FR)",16,"Leading telecom research center. Partner in 6G-BRICKS.","https://www.eurecom.fr/en"
+"CTTC",5,"CTTC (ES)",18,"Centre Tecnològic de Telecomunicacions de Catalunya. Coordinator of 6G-INTENSE.","https://www.cttc.es/"
+"UGR",5,"U. Granada (ES)",16,"AI research leadership. Partner in 6G-INTENSE.","https://www.ugr.es/"
+"Call 1",6,"Call 1 (2022)",20,"Focus: 5G Evolution. Approx ~€380M budget.","https://smart-networks.europa.eu/project-portfolio/"
+"Call 2",7,"Call 2 (2023)",20,"Focus: Detailed Design. Approx ~€130M budget.","https://smart-networks.europa.eu/project-portfolio/"
+"Call 3",8,"Call 3 (2024)",20,"Focus: Consolidation & Pilots.","https://smart-networks.europa.eu/project-portfolio/"
