@@ -179,7 +179,10 @@
         let simulation, svg, g, link, node, zoom;
         let globalData = { nodes: [], links: [] };
 
-        // Sample Data
+        // URL to the GitHub Raw CSV
+        const remoteCSVUrl = 'https://raw.githubusercontent.com/stop6G/6G-SCOUT/main/data/CSV_en.csv';
+
+        // Sample Data Fallback
         const sampleCSV = `Acrónimo;Coordinador;Partners;Dinero Recibido (€);Descripción;Año
 5G-STARDUST;German Aerospace Center;Hispasat, Orange, Thales Alenia;5942337;Satellite and terrestrial networks;2022
 6G-BRICKS;Athena Research;Orange, Lenovo, Thales Alenia;8382364;Experimentation;2022
@@ -622,8 +625,25 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
             e.target.value = ''; 
         });
 
-        initGraph();
-        updateGraph(parseCSVAndBuildGraph(sampleCSV));
+        // NEW: Function to load initial data from GitHub
+        async function loadInitialData() {
+            initGraph(); // Clear first
+            
+            try {
+                const response = await fetch(remoteCSVUrl);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const text = await response.text();
+                const graphData = parseCSVAndBuildGraph(text);
+                updateGraph(graphData);
+            } catch (error) {
+                console.warn('Could not load remote CSV, falling back to sample data:', error);
+                const graphData = parseCSVAndBuildGraph(sampleCSV);
+                updateGraph(graphData);
+            }
+        }
+
+        // Start with remote load
+        loadInitialData();
 
         window.addEventListener('resize', () => {
             svg.attr("viewBox", [0, 0, window.innerWidth, window.innerHeight]);
