@@ -124,6 +124,9 @@
                     <button onclick="switchTab('sns')" id="tab-sns" class="tab-btn active rounded-md">
                         SNS-JU
                     </button>
+                    <button onclick="switchTab('h2020')" id="tab-h2020" class="tab-btn rounded-md">
+                        HORIZON2020
+                    </button>
                     <button onclick="switchTab('non-sns')" id="tab-non-sns" class="tab-btn rounded-md">
                         Other EU Projects
                     </button>
@@ -229,8 +232,12 @@
                 filename: 'CSV_en.csv', // Actual file
                 subtitle: 'SNS-JU 2022-2024'
             },
+            'h2020': {
+                filename: 'CSVH2020.csv',
+                subtitle: 'Horizon 2020 Projects'
+            },
             'non-sns': {
-                filename: 'CSVotherEU.csv', // Updated filename as requested
+                filename: 'CSVotherEU.csv', 
                 subtitle: 'Other EU Projects'
             }
         };
