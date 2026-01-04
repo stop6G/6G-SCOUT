@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EU 6G Ecosystem 2022-2024</title>
+    <title>EU 6G Ecosystem</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- D3.js v7 -->
@@ -32,6 +32,28 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
         }
 
+        /* Tab Styles */
+        .tab-btn {
+            position: relative;
+            padding: 0.5rem 1rem;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn:hover {
+            color: #e2e8f0;
+            background: rgba(255,255,255,0.03);
+        }
+        .tab-btn.active {
+            color: #fff;
+            border-bottom-color: #38bdf8; /* Sky blue underline */
+            background: rgba(56, 189, 248, 0.1);
+        }
+        
         /* Input Styles */
         .search-input {
             background: rgba(0, 0, 0, 0.3);
@@ -79,18 +101,32 @@
 
     <!-- Floating Header -->
     <header class="absolute top-0 left-0 w-full z-10 p-4 pointer-events-none">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center max-w-7xl mx-auto pointer-events-auto gap-4">
+        <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center max-w-7xl mx-auto pointer-events-auto gap-4">
             
-            <!-- Logo & Title -->
-            <div class="glass-panel px-6 py-3 rounded-2xl flex-shrink-0 flex flex-col justify-center min-w-[200px]">
-                <h1 class="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-fuchsia-500 leading-tight">
-                    EU 6G Ecosystem
-                </h1>
-                <div class="flex items-center justify-between gap-3 mt-1">
-                    <p class="text-[10px] md:text-xs text-gray-400 font-bold text-fuchsia-200">SNS-JU 2022-2024</p>
-                    <span class="h-3 w-px bg-gray-700"></span>
-                    <!-- Total Investment Display -->
-                    <p class="text-[10px] md:text-xs text-emerald-400 font-mono font-bold" id="header-total-investment">0 €</p>
+            <!-- Logo & Tabs Container -->
+            <div class="glass-panel px-6 py-3 rounded-2xl flex-shrink-0 flex flex-col md:flex-row items-center gap-6 min-w-[300px]">
+                <!-- Title -->
+                <div class="flex flex-col justify-center">
+                    <h1 class="text-xl md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-fuchsia-500 leading-tight">
+                        EU 6G Ecosystem
+                    </h1>
+                    <div class="flex items-center gap-3 mt-1">
+                        <!-- Dynamic Subtitle -->
+                        <p class="text-[10px] md:text-xs text-gray-400 font-bold text-fuchsia-200" id="header-subtitle">Loading...</p>
+                        <span class="h-3 w-px bg-gray-700"></span>
+                        <!-- Total Investment Display -->
+                        <p class="text-[10px] md:text-xs text-emerald-400 font-mono font-bold" id="header-total-investment">0 €</p>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex bg-black/20 rounded-lg p-1">
+                    <button onclick="switchTab('sns')" id="tab-sns" class="tab-btn active rounded-md">
+                        SNS-JU
+                    </button>
+                    <button onclick="switchTab('non-sns')" id="tab-non-sns" class="tab-btn rounded-md">
+                        Other EU Projects
+                    </button>
                 </div>
             </div>
 
@@ -115,7 +151,7 @@
                 <div class="h-6 w-px bg-gray-700 mx-1"></div>
 
                 <!-- Load File -->
-                <label class="cursor-pointer hover:bg-white/10 p-2 rounded-lg transition-colors text-cyan-400" title="Upload CSV">
+                <label class="cursor-pointer hover:bg-white/10 p-2 rounded-lg transition-colors text-cyan-400" title="Upload Local CSV">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     <input type="file" id="csvInput" accept=".csv" class="hidden" />
                 </label>
@@ -184,11 +220,22 @@
         let simulation, svg, g, link, node, zoom;
         let globalData = { nodes: [], links: [] };
 
-        // Prioritized list of sources to load data
-        const csvSources = [
-            './data/CSV_en.csv', // 1. Try Relative path (Best for GitHub Pages structure)
-            'https://raw.githubusercontent.com/stop6G/6G-SCOUT/main/data/CSV_en.csv' // 2. Try Absolute path (Best for Local/Canvas)
-        ];
+        // --- Dataset Configuration ---
+        // Base URL for raw content from GitHub
+        const baseUrl = 'https://raw.githubusercontent.com/stop6G/6G-SCOUT/main/data/';
+        
+        const datasets = {
+            'sns': {
+                filename: 'CSV_en.csv', // Actual file
+                subtitle: 'SNS-JU 2022-2024'
+            },
+            'non-sns': {
+                filename: 'CSVotherEU.csv', // Updated filename as requested
+                subtitle: 'Other EU Projects'
+            }
+        };
+
+        let currentTabId = 'sns'; // Default tab
 
         // Sample Data Fallback
         const sampleCSV = `Acrónimo;Coordinador;Partners;Dinero Recibido (€);Descripción;Año
@@ -215,10 +262,7 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
 
             const projects = [];
             const links = [];
-            
-            // Maps to track roles and connections
             const entityMap = new Map();
-
             const regex = new RegExp(`(?:^|${sep})(?:"([^"]*)"|([^${sep}]*))`, 'g');
 
             for (let i = 1; i < lines.length; i++) {
@@ -241,7 +285,6 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
                     const desc = matches[4] || "";
                     const year = matches[5] || "";
 
-                    // 1. Create Project Node
                     projects.push({
                         id: acronym,
                         type: 'project',
@@ -251,45 +294,28 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
                         radius: 20 + (Math.log(money + 1) / 2)
                     });
 
-                    // 2. Process Coordinator
                     if (coordName) {
                         const cEntry = entityMap.get(coordName) || { isCoordinator: false, count: 0 };
                         cEntry.isCoordinator = true;
                         cEntry.count += 1;
                         entityMap.set(coordName, cEntry);
-
-                        links.push({
-                            source: acronym,
-                            target: coordName,
-                            value: 2 
-                        });
+                        links.push({ source: acronym, target: coordName, value: 2 });
                     }
 
-                    // 3. Process Partners
                     if (rawPartners.startsWith('"') && rawPartners.endsWith('"')) rawPartners = rawPartners.slice(1, -1);
                     const partners = rawPartners.split(/,/).map(p => p.trim()).filter(p => p.length > 0);
 
                     partners.forEach(pName => {
                         if (pName === coordName) return;
-
                         const pEntry = entityMap.get(pName) || { isCoordinator: false, count: 0 };
                         pEntry.count += 1;
                         entityMap.set(pName, pEntry);
-
-                        links.push({
-                            source: acronym,
-                            target: pName,
-                            value: 1
-                        });
+                        links.push({ source: acronym, target: pName, value: 1 });
                     });
                 }
             }
 
-            // CRITICAL FIX: Create a set of Project IDs to prevent duplicates
-            // This prevents creating a Partner node if a Project node with the same name already exists
             const projectIds = new Set(projects.map(p => p.id));
-
-            // Create nodes for Coordinators & Partners, FILTERING out those that are already Projects
             const otherNodes = Array.from(entityMap.entries())
                 .filter(([name]) => !projectIds.has(name)) 
                 .map(([name, data]) => {
@@ -302,22 +328,15 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
                     };
                 });
 
-            return {
-                nodes: [...projects, ...otherNodes],
-                links: links
-            };
+            return { nodes: [...projects, ...otherNodes], links: links };
         }
 
         // --- 3. D3 Initialization & Clearing ---
         function initGraph() {
-            // FIX: Using standard DOM manipulation to clear the container properly
             const container = document.getElementById("graph-container");
-            if (container) {
-                container.innerHTML = "";
-            }
+            if (container) container.innerHTML = "";
 
-            svg = d3.select("#graph-container")
-                .append("svg")
+            svg = d3.select("#graph-container").append("svg")
                 .attr("width", "100%")
                 .attr("height", "100%")
                 .attr("viewBox", [0, 0, width, height])
@@ -333,10 +352,7 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
             feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
             g = svg.append("g");
-
-            zoom = d3.zoom()
-                .scaleExtent([0.1, 6])
-                .on("zoom", (event) => g.attr("transform", event.transform));
+            zoom = d3.zoom().scaleExtent([0.1, 6]).on("zoom", (event) => g.attr("transform", event.transform));
             svg.call(zoom);
 
             simulation = d3.forceSimulation()
@@ -356,17 +372,11 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
                 .map(n => `<option value="${n.id}">${n.type === 'project' ? 'Project' : (n.type === 'coordinator' ? 'Coordinator' : 'Partner')}</option>`)
                 .join('');
 
-            // --- Stats Updates ---
             document.getElementById('count-projects').innerText = data.nodes.filter(n => n.type === 'project').length;
             document.getElementById('count-coordinators').innerText = data.nodes.filter(n => n.type === 'coordinator').length;
             document.getElementById('count-partners').innerText = data.nodes.filter(n => n.type === 'partner').length;
             
-            // --- NEW: Calculate Total Investment ---
-            const totalMoney = data.nodes
-                .filter(n => n.type === 'project')
-                .reduce((sum, n) => sum + (n.money || 0), 0);
-            
-            // Update the header display
+            const totalMoney = data.nodes.filter(n => n.type === 'project').reduce((sum, n) => sum + (n.money || 0), 0);
             document.getElementById('header-total-investment').innerText = formatMoneyShort(totalMoney);
 
             link = g.selectAll(".link")
@@ -377,7 +387,6 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
                 .attr("stroke-opacity", d => d.value === 2 ? 0.6 : 0.3)
                 .attr("stroke-width", d => d.value === 2 ? 1.5 : 1);
 
-            // Use Key function for data binding to ensure identity
             node = g.selectAll(".node")
                 .data(data.nodes, d => d.id) 
                 .join("g")
@@ -431,23 +440,15 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
         }
 
         function ticked() {
-            link
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
-
-            node
-                .attr("transform", d => `translate(${d.x},${d.y})`);
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
         }
 
         // --- 5. Interactions & Search ---
-
         function handleSearch(val) {
             if (!val) return;
             const target = globalData.nodes.find(n => n.id.toLowerCase() === val.toLowerCase()) || 
                            globalData.nodes.find(n => n.id.toLowerCase().includes(val.toLowerCase()));
-
             if (target) {
                 focusOnNode(target);
                 handleClick(null, target);
@@ -458,80 +459,46 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
             const scale = 2.5;
             const x = -d.x * scale + window.innerWidth / 2;
             const y = -d.y * scale + window.innerHeight / 2;
-
-            svg.transition().duration(1000)
-                .call(zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
-
+            svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
             d3.selectAll('.node').classed('node-highlight', false);
             const safeId = "#node-" + d.id.replace(/\s+/g, '-').replace(/[^\w-]/g, '');
             d3.select(safeId).classed('node-highlight', true);
-            
-            setTimeout(() => {
-                d3.select(safeId).classed('node-highlight', false);
-            }, 3000);
+            setTimeout(() => { d3.select(safeId).classed('node-highlight', false); }, 3000);
         }
 
         function dragstarted(event, d) {
             if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
+            d.fx = d.x; d.fy = d.y;
         }
         function dragged(event, d) {
-            d.fx = event.x;
-            d.fy = event.y;
+            d.fx = event.x; d.fy = event.y;
         }
         function dragended(event, d) {
             if (!event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
+            d.fx = null; d.fy = null;
         }
 
         function handleMouseOver(event, d) {
-            let typeLabel = 'Partner';
-            let colorClass = 'cyan-400';
-            
-            if (d.type === 'project') {
-                typeLabel = 'R&D Project';
-                colorClass = 'fuchsia-400';
-            } else if (d.type === 'coordinator') {
-                typeLabel = 'Coordinator';
-                colorClass = 'amber-500';
-            }
+            let typeLabel = 'Partner', colorClass = 'cyan-400';
+            if (d.type === 'project') { typeLabel = 'R&D Project'; colorClass = 'fuchsia-400'; } 
+            else if (d.type === 'coordinator') { typeLabel = 'Coordinator'; colorClass = 'amber-500'; }
 
-            const tooltip = d3.select("#tooltip");
-            tooltip.style("display", "block")
-                .style("left", (event.pageX + 15) + "px")
-                .style("top", (event.pageY - 15) + "px")
-                .html(`
-                    <div class="font-bold text-${colorClass} mb-1">${d.id}</div>
-                    <div class="text-xs text-gray-400 uppercase tracking-wider">${typeLabel}</div>
-                    ${d.type !== 'project' ? `<div class="text-[10px] text-gray-500 mt-1">Involved in ${d.count} projects</div>` : ''}
-                `);
+            d3.select("#tooltip").style("display", "block").style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 15) + "px")
+                .html(`<div class="font-bold text-${colorClass} mb-1">${d.id}</div>
+                       <div class="text-xs text-gray-400 uppercase tracking-wider">${typeLabel}</div>
+                       ${d.type !== 'project' ? `<div class="text-[10px] text-gray-500 mt-1">Involved in ${d.count} projects</div>` : ''}`);
 
             const connectedLinks = globalData.links.filter(l => l.source.id === d.id || l.target.id === d.id);
             const connectedNodeIds = new Set();
-            connectedLinks.forEach(l => {
-                connectedNodeIds.add(l.source.id);
-                connectedNodeIds.add(l.target.id);
-            });
+            connectedLinks.forEach(l => { connectedNodeIds.add(l.source.id); connectedNodeIds.add(l.target.id); });
 
-            node.transition().duration(200).style("opacity", n => 
-                (n.id === d.id || connectedNodeIds.has(n.id)) ? 1 : 0.1
-            );
-            link.transition().duration(200).style("stroke-opacity", l => 
-                (l.source.id === d.id || l.target.id === d.id) ? 0.8 : 0.05
-            ).style("stroke", l => 
-                (l.source.id === d.id || l.target.id === d.id) ? "#fff" : colorLink
-            );
+            node.transition().duration(200).style("opacity", n => (n.id === d.id || connectedNodeIds.has(n.id)) ? 1 : 0.1);
+            link.transition().duration(200).style("stroke-opacity", l => (l.source.id === d.id || l.target.id === d.id) ? 0.8 : 0.05)
+                .style("stroke", l => (l.source.id === d.id || l.target.id === d.id) ? "#fff" : colorLink);
             
             if(d.type === 'partner' || d.type === 'coordinator') {
-                d3.select(event.target.parentNode).append("text")
-                    .attr("class", "partner-hover-text")
-                    .attr("dy", -d.radius - 5)
-                    .attr("text-anchor", "middle")
-                    .text(d.id)
-                    .attr("fill", "#fff")
-                    .attr("font-size", "10px");
+                d3.select(event.target.parentNode).append("text").attr("class", "partner-hover-text")
+                    .attr("dy", -d.radius - 5).attr("text-anchor", "middle").text(d.id).attr("fill", "#fff").attr("font-size", "10px");
             }
         }
 
@@ -542,18 +509,16 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
             d3.select(event.target.parentNode).select(".partner-hover-text").remove();
         }
 
+        // --- 6. Panel ---
+
         function handleClick(event, d) {
             const panel = document.getElementById('details-panel');
             const content = document.getElementById('panel-content');
-            
             panel.classList.remove('translate-x-[120%]');
 
             if (d.type === 'project') {
                 const moneyFmt = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format(d.money);
-                const partners = globalData.links
-                    .filter(l => l.source.id === d.id)
-                    .map(l => l.target.id)
-                    .sort();
+                const partners = globalData.links.filter(l => l.source.id === d.id).map(l => l.target.id).sort();
 
                 content.innerHTML = `
                     <div class="border-b border-gray-700 pb-4">
@@ -575,17 +540,13 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
 
                     <div class="flex-1 overflow-hidden flex flex-col">
                         <h3 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-wider">Collaborators (${partners.length})</h3>
-                        <div class="flex flex-wrap gap-2 overflow-y-auto pr-2 custom-scroll">
+                        <div class="flex flex-wrap gap-2 overflow-y-auto pr-2 custom-scroll max-h-48">
                             ${partners.map(p => `<button onclick="handleSearch('${p}')" class="px-2 py-1 text-xs bg-cyan-900/20 text-cyan-200 border border-cyan-500/20 rounded hover:bg-cyan-500/20 hover:border-cyan-400 transition-all text-left">${p}</button>`).join('')}
                         </div>
                     </div>
                 `;
             } else {
-                const projects = globalData.links
-                    .filter(l => l.target.id === d.id)
-                    .map(l => l.source.id)
-                    .sort();
-                
+                const projects = globalData.links.filter(l => l.target.id === d.id).map(l => l.source.id).sort();
                 const typeLabel = d.type === 'coordinator' ? 'Coordinator' : 'Partner';
                 const bgClass = d.type === 'coordinator' ? 'bg-amber-900/50 text-amber-300 border-amber-500/30' : 'bg-cyan-900/50 text-cyan-300 border-cyan-500/30';
 
@@ -597,7 +558,7 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
 
                     <div>
                         <h3 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-wider">Participates in (${projects.length}) Projects</h3>
-                        <ul class="space-y-2">
+                        <ul class="space-y-2 max-h-64 overflow-y-auto custom-scroll">
                             ${projects.map(proj => `
                                 <li class="group flex items-center p-2 rounded bg-gray-800/30 hover:bg-gray-800/80 border border-white/5 hover:border-fuchsia-500/30 transition-all cursor-pointer" onclick="handleSearch('${proj}')">
                                     <span class="w-2 h-2 rounded-full bg-fuchsia-500 mr-3 group-hover:scale-125 transition-transform"></span>
@@ -610,6 +571,7 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
             }
         }
 
+        // --- Other Setup ---
         function closePanel() {
             document.getElementById('details-panel').classList.add('translate-x-[120%]');
         }
@@ -626,59 +588,70 @@ XTRUST-6G;Centre for Research;Ericsson, Nokia, Telefónica;7998595;Trust and sec
         document.getElementById('csvInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
                 const graphData = parseCSVAndBuildGraph(text);
-                
-                // FIX: Clean the graph before updating to prevent "shadow nodes"
                 initGraph();
-                
                 updateGraph(graphData);
             };
             reader.readAsText(file);
-            
-            // Allow re-uploading the same file if needed
             e.target.value = ''; 
         });
 
-        // NEW: Function to load initial data from GitHub
-        async function loadInitialData() {
-            initGraph(); // Clear first
+        // --- Tab Management ---
+        function switchTab(tabId) {
+            if (tabId === currentTabId) return; // Do nothing if clicking active tab
+
+            // Update UI State
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
             
-            // Iterate through the list of candidates
-            for (const url of csvSources) {
+            // Update Subtitle
+            const config = datasets[tabId];
+            document.getElementById('header-subtitle').innerText = config.subtitle;
+            
+            currentTabId = tabId;
+            
+            // Load Data
+            loadDataForTab(config);
+        }
+
+        async function loadDataForTab(config) {
+            initGraph(); // Clear previous graph
+            closePanel(); // Close details panel if open
+
+            // Construct Sources List (Relative, then Absolute)
+            const sources = [
+                `./data/${config.filename}`,
+                `${baseUrl}${config.filename}`
+            ];
+
+            for (const url of sources) {
                 try {
-                    console.log(`Attempting to load data from: ${url}`);
                     const response = await fetch(url);
-                    
                     if (response.ok) {
                         const text = await response.text();
+                        if (text.trim().startsWith('<')) throw new Error('HTML response');
                         
-                        // Basic check: Ensure it's not an HTML 404 page
-                        // (GitHub Pages 404s often return HTML with 404 status, but simple servers might just return index.html)
-                        if (text.trim().startsWith('<')) {
-                             throw new Error('Response appears to be HTML (likely 404 page)');
-                        }
-
                         const graphData = parseCSVAndBuildGraph(text);
                         updateGraph(graphData);
-                        return; // Exit on success
+                        return;
                     }
                 } catch (error) {
-                    console.warn(`Failed to load from ${url}:`, error);
+                    console.warn(`Failed to load ${url}:`, error);
                 }
             }
-
-            // Fallback: If all candidates fail, load sample data
-            console.warn('All remote sources failed. Falling back to sample data.');
+            
+            // Fallback
+            console.warn('Falling back to sample data.');
             const graphData = parseCSVAndBuildGraph(sampleCSV);
             updateGraph(graphData);
         }
 
-        // Start with remote load
-        loadInitialData();
+        // Initialize First Tab
+        document.getElementById('header-subtitle').innerText = datasets['sns'].subtitle;
+        loadDataForTab(datasets['sns']);
 
         window.addEventListener('resize', () => {
             svg.attr("viewBox", [0, 0, window.innerWidth, window.innerHeight]);
