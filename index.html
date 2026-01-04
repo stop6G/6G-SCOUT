@@ -101,7 +101,6 @@
 
     <!-- Floating Header -->
     <header class="absolute top-0 left-0 w-full z-10 p-4 pointer-events-none">
-        <!-- Changed breakpoint from xl to md to ensure horizontal layout on most screens -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full pointer-events-auto gap-4">
             
             <!-- Logo & Tabs Container -->
@@ -150,7 +149,7 @@
 
                 <div class="h-6 w-px bg-gray-700 mx-1"></div>
 
-                <!-- Search Bar (Moved to the right) -->
+                <!-- Search Bar -->
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-4 w-4 text-gray-400 group-focus-within:text-fuchsia-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,7 +158,7 @@
                     </div>
                     <input type="text" id="searchInput" list="nodes-datalist" 
                            class="search-input text-sm rounded-xl pl-10 pr-4 py-2 w-48 md:w-64" 
-                           placeholder="Search Project or Partner..."
+                           placeholder="Search Project, Partner or Expert..."
                            onchange="handleSearch(this.value)"
                            onkeydown="if(event.key === 'Enter') handleSearch(this.value)">
                     <datalist id="nodes-datalist"></datalist>
@@ -209,6 +208,11 @@
                 <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span>
                 <span class="text-xs text-gray-300">Total Stakeholders (<span id="count-partners">0</span>)</span>
             </div>
+            <!-- Enablers Legend -->
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff]"></span>
+                <span class="text-xs text-gray-300">Key Enablers (<span id="count-enablers">0</span>)</span>
+            </div>
         </div>
     </div>
 
@@ -220,15 +224,22 @@
         // Colors
         const colorProject = "#d946ef"; // Fuchsia
         const colorEntity = "#22d3ee";  // Cyan
+        const colorEnabler = "#ffffff"; // White for Key Enablers
         const colorCoordinatorStroke = "#f59e0b"; // Amber/Orange
         const colorLink = "#334155";    // Default Link
         const colorLinkCoord = "#f59e0b"; // Coordinator Link (Amber)
+        const colorLinkEnabler = "#94a3b8"; // Light Grey for Enablers
         
         let simulation, svg, g, link, node, zoom;
         let globalData = { nodes: [], links: [] };
+        
+        // --- Navigation Globals ---
+        let globalProjectIndex = {}; // Maps { 'normalized_project_name': 'tab_id' }
+        let pendingSearchTerm = null; // Stores term to search after tab switch
 
         // --- Dataset Configuration ---
         const baseUrl = 'https://raw.githubusercontent.com/stop6G/6G-SCOUT/main/data/';
+        const enablersFilename = 'CSVkeyenablers.csv';
         
         const datasets = {
             'sns': { filename: 'CSV_en.csv', subtitle: 'SNS-JU 2022-2024' },
@@ -251,7 +262,7 @@
         };
 
         // --- 2. Data Processing (CSV -> Graph) ---
-        function parseCSVAndBuildGraph(csvText) {
+        function parseCSVAndBuildGraph(csvText, enablersText = null) {
             const lines = csvText.trim().split('\n');
             const firstLine = lines[0];
             const sep = firstLine.includes(';') ? ';' : ',';
@@ -261,6 +272,7 @@
             const entityMap = new Map();
             const regex = new RegExp(`(?:^|${sep})(?:"([^"]*)"|([^${sep}]*))`, 'g');
 
+            // 2.1 Process Main Project Data
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
@@ -298,8 +310,6 @@
                             entityMap.set(coordName, { coordinated: new Set(), participated: new Set() });
                         }
                         entityMap.get(coordName).coordinated.add(acronym);
-                        
-                        // Link with type 'coordinator' for yellow color
                         links.push({ source: acronym, target: coordName, value: 2, type: 'coordinator' });
                     }
 
@@ -309,13 +319,10 @@
 
                     partners.forEach(pName => {
                         if (pName === coordName) return; 
-
                         if (!entityMap.has(pName)) {
                             entityMap.set(pName, { coordinated: new Set(), participated: new Set() });
                         }
                         entityMap.get(pName).participated.add(acronym);
-
-                        // Link with type 'partner' for default color
                         links.push({ source: acronym, target: pName, value: 1, type: 'partner' });
                     });
                 }
@@ -323,7 +330,8 @@
 
             const projectIds = new Set(projects.map(p => p.id));
             
-            const otherNodes = Array.from(entityMap.entries())
+            // Create Entity Nodes
+            let nodes = Array.from(entityMap.entries())
                 .filter(([name]) => !projectIds.has(name)) 
                 .map(([name, data]) => {
                     const count = data.coordinated.size + data.participated.size;
@@ -338,7 +346,101 @@
                     };
                 });
 
-            return { nodes: [...projects, ...otherNodes], links: links };
+            // 2.2 Process Enablers (if available)
+            if (enablersText) {
+                const eLines = enablersText.trim().split('\n');
+                const eSep = ';'; // Explicitly defined for enablers CSV
+                // Name;Country;Base_City;Institution;Specialization;Key_Projects
+                
+                for (let i = 1; i < eLines.length; i++) {
+                    const line = eLines[i].trim();
+                    if (!line) continue;
+                    const cols = line.split(eSep).map(c => c.trim());
+                    
+                    if (cols.length >= 4) {
+                        const name = cols[0];
+                        const country = cols[1];
+                        const city = cols[2];
+                        const institutionStr = cols[3]; // e.g. "Athena RC / Uni Patras"
+                        const specialization = cols[4];
+                        const keyProjectsStr = cols[5] || "";
+                        const keyProjects = keyProjectsStr.split(',').map(p => p.trim());
+
+                        // STRATEGY 1: Match by Institution Name
+                        let matchedEntityId = null;
+                        
+                        for (const node of nodes) {
+                            const nId = node.id.toLowerCase();
+                            const instStr = institutionStr.toLowerCase();
+                            if ((instStr.includes(nId) && nId.length > 4) || (nId.includes(instStr) && instStr.length > 4)) {
+                                matchedEntityId = node.id;
+                                break;
+                            }
+                        }
+
+                        // STRATEGY 2: Match by Key Project Participation (Inference)
+                        // If institution not found, but we have one of their key projects in the graph
+                        if (!matchedEntityId) {
+                            for (const projName of keyProjects) {
+                                // Check if this project exists in our current 'projects' list
+                                const foundProject = projects.find(p => p.id.toLowerCase() === projName.toLowerCase());
+                                
+                                if (foundProject) {
+                                    // BINGO! The project exists here.
+                                    // 1. Create the Institution node if it doesn't exist yet
+                                    const existingInst = nodes.find(n => n.id === institutionStr);
+                                    if (!existingInst) {
+                                        matchedEntityId = institutionStr;
+                                        nodes.push({
+                                            id: institutionStr,
+                                            type: 'entity',
+                                            radius: 8, // Default size
+                                            count: 1,
+                                            coordinated: [],
+                                            participated: [foundProject.id]
+                                        });
+                                        // Link institution to project (inferred connection)
+                                        links.push({
+                                            source: foundProject.id,
+                                            target: institutionStr,
+                                            value: 1,
+                                            type: 'partner'
+                                        });
+                                    } else {
+                                        matchedEntityId = existingInst.id;
+                                    }
+                                    break; // Stop looking after first match
+                                }
+                            }
+                        }
+
+                        if (matchedEntityId) {
+                            // Create Enabler Node
+                            nodes.push({
+                                id: name,
+                                type: 'enabler',
+                                radius: 6, // Radius size 6
+                                country: country,
+                                city: city,
+                                institution: institutionStr,
+                                specialization: specialization,
+                                keyProjects: keyProjectsStr,
+                                linkedTo: matchedEntityId
+                            });
+
+                            // Create Link to Institution
+                            links.push({
+                                source: name,
+                                target: matchedEntityId,
+                                value: 1,
+                                type: 'enabler-link'
+                            });
+                        }
+                    }
+                }
+            }
+
+            return { nodes: [...projects, ...nodes], links: links };
         }
 
         // --- 3. D3 Initialization ---
@@ -388,19 +490,14 @@
             const datalist = document.getElementById('nodes-datalist');
             datalist.innerHTML = data.nodes
                 .sort((a,b) => a.id.localeCompare(b.id))
-                .map(n => `<option value="${n.id}">${n.type === 'project' ? 'Project' : 'Stakeholder'}</option>`)
+                .map(n => `<option value="${n.id}">${n.type === 'project' ? 'Project' : (n.type === 'enabler' ? 'Key Enabler' : 'Stakeholder')}</option>`)
                 .join('');
 
             // --- Stats Logic ---
-            // Projects
             document.getElementById('count-projects').innerText = data.nodes.filter(n => n.type === 'project').length;
-            
-            // Coordinators (Entities that coordinate at least one project)
-            const coordinatorsCount = data.nodes.filter(n => n.type === 'entity' && n.coordinated && n.coordinated.length > 0).length;
-            document.getElementById('count-coordinators').innerText = coordinatorsCount;
-
-            // Total Stakeholders (All unique entities)
+            document.getElementById('count-coordinators').innerText = data.nodes.filter(n => n.type === 'entity' && n.coordinated && n.coordinated.length > 0).length;
             document.getElementById('count-partners').innerText = data.nodes.filter(n => n.type === 'entity').length;
+            document.getElementById('count-enablers').innerText = data.nodes.filter(n => n.type === 'enabler').length;
             
             const totalMoney = data.nodes.filter(n => n.type === 'project').reduce((sum, n) => sum + (n.money || 0), 0);
             document.getElementById('header-total-investment').innerText = formatMoneyShort(totalMoney);
@@ -409,9 +506,14 @@
                 .data(data.links)
                 .join("line")
                 .attr("class", "link")
-                .attr("stroke", d => d.type === 'coordinator' ? colorLinkCoord : colorLink) // Coordinator links are Yellow
-                .attr("stroke-opacity", d => d.type === 'coordinator' ? 0.6 : 0.3) // Coordinator links slightly more visible
-                .attr("stroke-width", d => d.type === 'coordinator' ? 2 : 1); // Coordinator links slightly thicker
+                .attr("stroke", d => {
+                    if (d.type === 'coordinator') return colorLinkCoord;
+                    if (d.type === 'enabler-link') return colorLinkEnabler;
+                    return colorLink;
+                }) 
+                .attr("stroke-opacity", d => d.type === 'coordinator' ? 0.6 : 0.3)
+                .attr("stroke-width", d => d.type === 'coordinator' ? 2 : 1)
+                .style("stroke-dasharray", d => d.type === 'enabler-link' ? "2,2" : "none"); // Dashed for enablers
 
             node = g.selectAll(".node")
                 .data(data.nodes, d => d.id) 
@@ -425,15 +527,20 @@
 
             node.append("circle")
                 .attr("r", d => d.radius)
-                .attr("fill", d => d.type === 'project' ? colorProject : colorEntity)
+                .attr("fill", d => {
+                    if (d.type === 'project') return colorProject;
+                    if (d.type === 'enabler') return colorEnabler;
+                    return colorEntity;
+                })
                 .attr("stroke", d => {
                     if (d.type === 'project') return "#fff";
-                    // If entity coordinates at least one project, give it an amber stroke
+                    if (d.type === 'enabler') return "#000"; // Black stroke for white nodes
                     if (d.coordinated && d.coordinated.length > 0) return colorCoordinatorStroke;
                     return "none";
                 })
                 .attr("stroke-width", d => {
                     if (d.type === 'project') return 2;
+                    if (d.type === 'enabler') return 1;
                     if (d.coordinated && d.coordinated.length > 0) return 3; 
                     return 0;
                 })
@@ -446,6 +553,7 @@
                     handleClick(e, d);
                 });
 
+            // Labels logic
             const textGroup = node.append("text")
                 .attr("dy", d => -d.radius - 10)
                 .attr("text-anchor", "middle")
@@ -487,6 +595,15 @@
             simulation.force("x", d3.forceX(width / 2).strength(centerForceStrength));
             simulation.force("y", d3.forceY(height / 2).strength(centerForceStrength));
             simulation.alpha(1).restart();
+
+            // --- CROSS-TAB LOGIC: Handle Pending Search ---
+            if (pendingSearchTerm) {
+                // Wait briefly for simulation to initialize coordinates
+                setTimeout(() => {
+                    handleSearch(pendingSearchTerm);
+                    pendingSearchTerm = null; // Clear queue
+                }, 500); 
+            }
         }
 
         function ticked() {
@@ -498,11 +615,39 @@
         // --- 5. Interactions ---
         function handleSearch(val) {
             if (!val) return;
-            const target = globalData.nodes.find(n => n.id.toLowerCase() === val.toLowerCase()) || 
-                           globalData.nodes.find(n => n.id.toLowerCase().includes(val.toLowerCase()));
+            const searchVal = val.trim().toLowerCase();
+
+            // 1. Try EXACT Local Search (Highest Priority)
+            let target = globalData.nodes.find(n => n.id.toLowerCase() === searchVal);
+
             if (target) {
                 focusOnNode(target);
                 handleClick(null, target);
+                return;
+            }
+
+            // 2. Try EXACT Cross-Tab Search (Second Priority)
+            // This prevents "Hexa-X" search from jumping to "Hexa-X-II" in current tab
+            // if "Hexa-X" actually exists in another tab.
+            const targetTab = globalProjectIndex[searchVal];
+            if (targetTab && targetTab !== currentTabId) {
+                // Show a brief toast or log
+                // console.log(`Found "${val}" in ${datasets[targetTab].subtitle}. Switching...`);
+                pendingSearchTerm = val; // Queue the search
+                switchTab(targetTab);    // Switch tab
+                return;
+            }
+
+            // 3. Fallback: Try Partial Local Search (Lowest Priority)
+            // Only do this if we haven't found an exact match anywhere else.
+            target = globalData.nodes.find(n => n.id.toLowerCase().includes(searchVal));
+            
+            if (target) {
+                focusOnNode(target);
+                handleClick(null, target);
+            } else {
+                console.warn('Entity not found:', val);
+                // Optional: You could alert the user "Not found in any database"
             }
         }
 
@@ -532,11 +677,12 @@
         function handleMouseOver(event, d) {
             let typeLabel = 'Stakeholder', colorClass = 'cyan-400';
             if (d.type === 'project') { typeLabel = 'R&D Project'; colorClass = 'fuchsia-400'; } 
+            else if (d.type === 'enabler') { typeLabel = 'Key Enabler'; colorClass = 'white'; }
 
             d3.select("#tooltip").style("display", "block").style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 15) + "px")
                 .html(`<div class="font-bold text-${colorClass} mb-1">${d.id}</div>
                        <div class="text-xs text-gray-400 uppercase tracking-wider">${typeLabel}</div>
-                       ${d.type !== 'project' ? `<div class="text-[10px] text-gray-500 mt-1">Connected to ${d.count} projects</div>` : ''}`);
+                       ${d.type !== 'project' && d.type !== 'enabler' ? `<div class="text-[10px] text-gray-500 mt-1">Connected to ${d.count} projects</div>` : ''}`);
 
             const connectedLinks = globalData.links.filter(l => l.source.id === d.id || l.target.id === d.id);
             const connectedNodeIds = new Set();
@@ -544,18 +690,16 @@
 
             node.transition().duration(200).style("opacity", n => (n.id === d.id || connectedNodeIds.has(n.id)) ? 1 : 0.1);
             link.transition().duration(200).style("stroke-opacity", l => {
-                // Keep coordinator links visible and gold, others faint
                 if (l.type === 'coordinator' && (l.source.id === d.id || l.target.id === d.id)) return 0.9;
                 return (l.source.id === d.id || l.target.id === d.id) ? 0.8 : 0.05;
             })
             .style("stroke", l => {
-                // If it's a coordinator link, keep it gold/amber
                 if (l.type === 'coordinator') return colorLinkCoord;
-                // Otherwise white on hover
+                if (l.type === 'enabler-link') return colorLinkEnabler;
                 return (l.source.id === d.id || l.target.id === d.id) ? "#fff" : colorLink;
             });
             
-            if(d.type === 'entity') {
+            if(d.type === 'entity' || d.type === 'enabler') {
                 d3.select(event.target.parentNode).append("text").attr("class", "partner-hover-text")
                     .attr("dy", -d.radius - 5).attr("text-anchor", "middle").text(d.id).attr("fill", "#fff").attr("font-size", "10px");
             }
@@ -567,7 +711,11 @@
             // Reset stroke colors and opacities
             link.transition().duration(300)
                 .style("stroke-opacity", d => d.type === 'coordinator' ? 0.6 : 0.3)
-                .style("stroke", d => d.type === 'coordinator' ? colorLinkCoord : colorLink);
+                .style("stroke", d => {
+                    if(d.type === 'coordinator') return colorLinkCoord;
+                    if(d.type === 'enabler-link') return colorLinkEnabler;
+                    return colorLink;
+                });
             d3.select(event.target.parentNode).select(".partner-hover-text").remove();
         }
 
@@ -618,6 +766,49 @@
                         </div>
                     </div>
                 `;
+            } else if (d.type === 'enabler') {
+                // ENABLER PANEL
+                content.innerHTML = `
+                    <div class="border-b border-gray-700 pb-4 mb-4">
+                        <span class="px-2 py-1 rounded bg-white text-black text-xs font-bold uppercase tracking-wide">Key Enabler</span>
+                        <h2 class="text-2xl font-bold text-white mt-2 leading-tight">${d.id}</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gray-800/40 p-3 rounded-lg border border-white/5">
+                            <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Institution</p>
+                            <p class="text-sm font-semibold text-cyan-300 cursor-pointer hover:underline" onclick="handleSearch('${d.linkedTo}')">${d.institution}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-gray-800/40 p-3 rounded-lg border border-white/5">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Country</p>
+                                <p class="text-sm text-white">${d.country}</p>
+                            </div>
+                            <div class="bg-gray-800/40 p-3 rounded-lg border border-white/5">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">City</p>
+                                <p class="text-sm text-white">${d.city}</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800/40 p-3 rounded-lg border border-white/5">
+                            <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Specialization</p>
+                            <p class="text-sm text-gray-300 italic">"${d.specialization}"</p>
+                        </div>
+
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Key Projects History</p>
+                            <ul class="space-y-2">
+                                ${d.keyProjects.split(',').map(p => `
+                                    <li class="group flex items-center p-2 rounded bg-cyan-900/10 hover:bg-cyan-900/30 border border-cyan-500/20 hover:border-cyan-500/50 transition-all cursor-pointer" onclick="handleSearch('${p.trim()}')">
+                                        <span class="w-2 h-2 rounded-full bg-fuchsia-500 mr-3 group-hover:scale-125 transition-transform"></span>
+                                        <span class="text-sm text-gray-200 group-hover:text-white">${p.trim()}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
             } else {
                 // Entity Panel (Partner/Coordinator)
                 const coordinated = d.coordinated || [];
@@ -625,7 +816,6 @@
 
                 let rolesHtml = '';
 
-                // Section: Projects Coordinated
                 if (coordinated.length > 0) {
                     rolesHtml += `
                         <div class="mb-6">
@@ -644,7 +834,6 @@
                     `;
                 }
 
-                // Section: Projects Participated
                 if (participated.length > 0) {
                     rolesHtml += `
                         <div>
@@ -671,6 +860,60 @@
                     ${rolesHtml}
                 `;
             }
+        }
+
+        // --- Global Indexing Function ---
+        async function buildGlobalIndex() {
+            const index = {};
+            
+            // Loop through all configured datasets
+            for (const [tabId, config] of Object.entries(datasets)) {
+                // Determine sources (same fallback logic as loadDataForTab)
+                const sources = [
+                    `./data/${config.filename}`,
+                    `${baseUrl}${config.filename}`
+                ];
+                
+                let text = null;
+                for (const url of sources) {
+                    try {
+                        const response = await fetch(url);
+                        if (response.ok) {
+                            const t = await response.text();
+                            if (!t.trim().startsWith('<')) {
+                                text = t;
+                                break;
+                            }
+                        }
+                    } catch (e) {}
+                }
+
+                if (text) {
+                    const lines = text.trim().split('\n');
+                    const sep = lines[0].includes(';') ? ';' : ',';
+                    const regex = new RegExp(`(?:^|${sep})(?:"([^"]*)"|([^${sep}]*))`, 'g');
+
+                    // Skip header
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        // Just need the first column (Project Acronym)
+                        regex.lastIndex = 0;
+                        const match = regex.exec(line);
+                        if (match) {
+                            const val = match[1] !== undefined ? match[1] : match[2];
+                            if (val) {
+                                // Map lowercase name to tab ID
+                                index[val.trim().toLowerCase()] = tabId;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            globalProjectIndex = index;
+            console.log("Global Project Index Built:", Object.keys(index).length, "projects indexed.");
         }
 
         // --- Other Setup ---
@@ -718,35 +961,50 @@
             initGraph(); 
             closePanel(); 
 
-            const sources = [
-                `./data/${config.filename}`,
-                `${baseUrl}${config.filename}`
-            ];
+            // Create promise array to fetch both Main CSV and Enablers CSV
+            const fetchMain = fetchWithFallback(config.filename);
+            const fetchEnablers = fetchWithFallback(enablersFilename);
 
+            try {
+                const [mainText, enablersText] = await Promise.all([fetchMain, fetchEnablers]);
+                
+                if (mainText) {
+                    const graphData = parseCSVAndBuildGraph(mainText, enablersText);
+                    updateGraph(graphData);
+                } else {
+                    console.warn('Main data failed to load');
+                    // Fallback to sample
+                    const graphData = parseCSVAndBuildGraph(sampleCSV);
+                    updateGraph(graphData);
+                }
+            } catch (error) {
+                console.error("Error loading data", error);
+            }
+        }
+
+        // Helper to try local then remote
+        async function fetchWithFallback(filename) {
+            const sources = [
+                `./data/${filename}`,
+                `${baseUrl}${filename}`
+            ];
+            
             for (const url of sources) {
                 try {
                     const response = await fetch(url);
                     if (response.ok) {
                         const text = await response.text();
-                        if (text.trim().startsWith('<')) throw new Error('HTML response');
-                        
-                        const graphData = parseCSVAndBuildGraph(text);
-                        updateGraph(graphData);
-                        return;
+                        if (!text.trim().startsWith('<')) return text;
                     }
-                } catch (error) {
-                    console.warn(`Failed to load ${url}:`, error);
-                }
+                } catch (e) { /* continue */ }
             }
-            
-            console.warn('Falling back to sample data.');
-            const graphData = parseCSVAndBuildGraph(sampleCSV);
-            updateGraph(graphData);
+            return null;
         }
 
-        // Initialize First Tab
+        // Initialize First Tab and Global Index
         document.getElementById('header-subtitle').innerText = datasets['sns'].subtitle;
         loadDataForTab(datasets['sns']);
+        buildGlobalIndex(); // Start background indexing
 
         window.addEventListener('resize', () => {
             svg.attr("viewBox", [0, 0, window.innerWidth, window.innerHeight]);
